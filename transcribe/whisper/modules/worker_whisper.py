@@ -37,6 +37,6 @@ class Worker_whisper(threading.Thread):
             self.config['INPUT_DIR'])
 
         if (len(wave_list) <= 0):
-            print("No wav files found in the input directory.")
+            print("No wav files found in the input directory to transcribe.")
         else:
             transcription(self.config, wave_list)

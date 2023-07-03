@@ -1,19 +1,20 @@
-# Test
+# De
 
-Yarn requires Node.js 4 or higher to be installed.
+git filter-repo --invert-paths --path *.dll
 
-```powershell
-npm install --global yarn
-yarn setup
-```
 
-Yarn setup will fail to create, copy our env. We need to do this manually
 
-```powershell
-Copy-Item -Path ./server/.env.example -Destination ./server/.env.development -Force
-Copy-Item -Path ./collector/.env.example -Destination ./collector/.env -Force
-Copy-Item -Path ./docker/.env.example -Destination ./docker/.env -Force
-Write-Host "All ENV files copied!"
-```
+Create an text file
+and then convert it to JSON, Add support for playlist
 
-Now fill in the environment file with the proper values.
+
+Add an folder called files under youtubr
+
+
+Connection Refused 10061 (Becouse Of Proxy not installed)
+
+
+Include Proxy instalölation
+How to store 
+
+

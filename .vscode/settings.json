@@ -4,6 +4,7 @@
     "applicat",
     "BLAS",
     "bsize",
+    "chardet",
     "creationflags",
     "cublas",
     "cuda",
