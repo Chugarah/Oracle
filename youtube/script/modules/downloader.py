@@ -149,7 +149,6 @@ def download_video(video_url, config, video_id):
     process = run_subprocess(command)
     progress_bar = get_file_info(
         process, video_id)
-    progress_bar.close()
 
     try:
         try:
