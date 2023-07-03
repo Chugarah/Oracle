@@ -93,10 +93,11 @@ We need to set path from where where we want to store the files and where we sho
 
 ### 6. Install Proxy Server
 
-The yt-dlp community recommend an proxy server for better perfor <http://www.privoxy.org/>
+The yt-dlp community recommend an proxy server for better performance. I am using Privoxy for Windows. <http://www.privoxy.org/>. Download and install it, after the installation you have to edit the "yt-dlp.conf" file in youtube and add the line below. The port number is the default port number for Privoxy.
 
 ```powershell
-python .\youtube\script\main.py
+# Use local proxy
+--proxy 127.0.0.1:8118
 ```
 
 ### 7. Final Step, run the script
