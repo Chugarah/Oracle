@@ -1,0 +1,5 @@
+{
+    "config": "youtube/script/youtube-conf/yt-dlp.conf",
+    "inputFolder": "youtube/files/",
+    "jsonFile": "youtube/script/youtube-conf/youtube-links.json"
+}

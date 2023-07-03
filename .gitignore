@@ -1,0 +1,12 @@
+/youtube/files
+transcribe/whisper/cpu/Models
+transcribe/whisper/gpu/Models
+/ffmpeg-2023-06-19
+/db/MongoDB/data
+/db/MongoDB/Software/mongodb-compass-1.38.0-win32-x64.exe
+/db/MongoDB/.env
+/transcribe/whisper/.cache/
+transcribe/whisper/models
+*.dll
+*.7z
+*.zip

@@ -1,0 +1,26 @@
+{
+  "type": "Compass Connections",
+  "version": {
+    "$numberInt": "1"
+  },
+  "connections": [
+    {
+      "id": "cf100eae-2ab6-4b27-bdcf-cc9568165d61",
+      "connectionOptions": {
+        "connectionString": "mongodb://admin:secret@localhost:27017/?authMechanism=DEFAULT",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "favorite": {
+        "name": "Oracle",
+        "color": "color5"
+      },
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1687469727497"
+        }
+      }
+    }
+  ]
+}

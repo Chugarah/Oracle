@@ -1,0 +1,16 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:${MONGO_VERSION}
+    volumes:
+      - ./data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - ${HOST_PORT}:${CONTAINER_PORT}
+    networks:
+      - my-network
+
+networks:
+  my-network:

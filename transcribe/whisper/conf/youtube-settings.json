@@ -1,0 +1,5 @@
+{
+    "config": "conf/yt-dlp.conf",
+    "inputFolder": "../files",
+    "jsonFile": "conf/videos.json"
+}

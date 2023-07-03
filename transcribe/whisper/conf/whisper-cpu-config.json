@@ -1,0 +1,5 @@
+{
+    "InputFolder": "../../files",
+    "WhisperCommand": "./Whisper-CPU/main.exe",
+    "WhisperArguments": "--threads 8 --processors 1 --no-timestamps --language 'auto' --print-progress --output-json -ovtt -osrt --model './Whisper-CPU/models/ggml-large.bin' --file '{0}' --output-file '{1}'"
+}

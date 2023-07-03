@@ -1,0 +1,6 @@
+{
+    "InputFolder": "./YouTube/files",
+    "whisperCommand": "whisper",
+    "whisperModel": "medium",
+    "whisperModelDir": "./Whisper-GPU/Models"
+}

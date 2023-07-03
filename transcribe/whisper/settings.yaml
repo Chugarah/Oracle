@@ -1,0 +1,65 @@
+######################### BASIC CONFIGURATION #########################
+# device to use (default: cuda) or cpu
+DEVICE: "cuda"
+# Set the language
+LANGUAGE: 'English'
+# https://github.com/guillaumekln/faster-whisper#large-v2-model-on-gpu
+# https://github.com/guillaumekln/faster-whisper#small-model-on-cpu
+# https://huggingface.co/openai/whisper-large
+# whisper-small
+# THis flags tells you where you can find the models large-v2
+# ['tiny', 'tiny.en', 'base', 'base.en', 'small', 'small.en', 'medium', 'medium.en', 'large', 'large-v1', 'large-v2']
+MODEL: "large-v2"
+# Where the models are stored
+MODEL_DIR: "transcribe/whisper/models"
+# This flag sets the maximum width for each line of the 
+# transcription to 100 characters. If a line exceeds this width, 
+# the text will wrap to the next line.
+MAX_LINE_WIDTH: 100
+# Output Print Debug
+DEBUG: false
+# No timestamp printed in output txt file
+WORD_TIMESTAMPS: true
+######################### BASIC CONFIGURATION #########################
+
+######################### FOLDER CONFIGURATION #########################
+# Directories for input and output files
+# Input directory should contain .wav files 16kHz
+# Output directory will result from the transcription
+# The output directory name will be created in the same directory wave files are located
+INPUT_DIR: "youtube/files"
+# This you want have your custom output directory
+# If is this set to false it needs youtube download module to be installed
+OUTPUT_DIR_ACTIVATION: false
+OUTPUT_DIR_NAME: "whisper"
+OUTPUT_DIR: "youtube"
+######################### FOLDER CONFIGURATION #########################
+
+######################### CPU VERSION #########################
+# number of threads used for CPU inference; By default number of the real cores but no more that 4 (default: 0)
+CPU_THREADS: 4
+######################### GPU VERSION #########################
+
+######################### ADVANCED SETTINGS #########################
+# Command to run
+EXEFILE_GPU: "transcribe/whisper/whisper-faster.exe"
+# if word_timestamps is True, merge these punctuation symbols with the next word 
+# (default: "'“¿([{-)
+PREPEND_PUNCTUATIONS: false
+# This flag controls whether punctuation marks should be appended 
+# to the transcriptions. When set to false, punctuation marks will 
+# not be added at the end of each line of the transcription.
+APPEND_PUNCTUATIONS: false
+# This flag sets the maximum number of lines for each 
+# transcription to 99999. It effectively allows for an unlimited number 
+# of lines in the output.
+MAX_LINE_COUNT: 99999
+# {default,auto,int8,int8_float16,int16,float16,float32}]
+COMPUTE_TYPE: "auto"
+# Enable the voice activity detection (VAD) to filter out parts of the audio 
+# without speech.
+VAD_FILTER: True
+# {txt,text,vtt,srt,tsv,json,all}, -f {txt,text,vtt,srt,tsv,json,all}
+# format of the output file; if not specified srt will be produced (default: srt)
+OUT_FORMAT: "all"
+######################### ADVANCED SETTINGS #########################
