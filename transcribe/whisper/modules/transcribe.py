@@ -12,7 +12,7 @@ from humanfriendly import parse_size
 # These regular expressions are used to extract specific information from the output of a subprocess.
 regex_duration = re.compile(
     r"Processing audio with duration (\d{2}(:\d{2}){0,2}\.\d{3})")
-regex_time = re.compile(r"Processing segment at (\d{2}:\d{2}\.\d{3})")
+regex_time = re.compile(r"Processing segment at (\d{2}(:\d{2}){0,2}\.\d{3})")
 regex_device_gpu = re.compile(r"GPU #(\d+): (.+)")
 regex_device_cpu = re.compile(r"CPU: (.+)")
 regex_download_model = re.compile(
@@ -46,7 +46,7 @@ def get_file_info(process, file_name, config):
     progress_bar = tqdm(total=100, position=0, leave=True, dynamic_ncols=True)
 
     for line in process.stdout:
-        #  print(line)
+        # print(line)
 
         if config['DEVICE'] == "cpu":
             # Match device CPU

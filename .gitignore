@@ -10,3 +10,4 @@ transcribe/whisper/models
 *.dll
 *.7z
 *.zip
+*.pyc

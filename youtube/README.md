@@ -29,7 +29,6 @@ This assumes that you have made the base environment. If not, please read the on
 
 ```powershell
 conda install -c conda-forge ffmpeg
-conda install -c anaconda git
 ```
 
 ### 3. Install Python Packages
@@ -92,7 +91,15 @@ We need to set path from where where we want to store the files and where we sho
     --limit-rate 10000K
     ```
 
-### 6. Final Step, run the script
+### 6. Install Proxy Server
+
+The yt-dlp community recommend an proxy server for better perfor <http://www.privoxy.org/>
+
+```powershell
+python .\youtube\script\main.py
+```
+
+### 7. Final Step, run the script
 
 We are running the script from root directory (oracle).
 

@@ -28,7 +28,7 @@ def get_file_info(process, file_name, file_counter, files_to_convert):
             )
 
         if match := regex_time.search(line):
-            current_value = convert_time_to_seconds(match.group(1))
+            current_value = round(convert_time_to_seconds(match.group(1)), 3)
 
             # If current_value is greater than total duration,
             # set progress bar to 100%
