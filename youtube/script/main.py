@@ -9,9 +9,7 @@ from modules.playlist import GeneratePlayList
 def main():
     # Read settings
     settings = read_settings()
-
-    with open(settings['videoLinks'], 'r') as f:
-        youtube_links = json.load(f)
+    file_counter = 1
 
     # Ensure that the Worker objects start and finish sequentially
     q = queue.Queue()  # create a queue
@@ -20,10 +18,23 @@ def main():
     play_list_worker = GeneratePlayList(settings)
     q.put(play_list_worker)
 
-    # Create a Worker object for each link and put them in the queue
-    for link in youtube_links:
-        worker = Worker(link)
-        q.put(worker)
+    # Start each Worker object in the queue, one by one
+    while not q.empty():
+        worker = q.get()
+        worker.start()
+        worker.join()  # wait for the current thread to complete
+
+    # Open the text file
+    with open(settings['videoLinks'], 'r') as f:
+        # Read the file line by line
+        total_links = len(f.readlines())
+        f.seek(0)  # Reset file pointer to the beginning
+        for line in f:
+            # Convert each line from JSON to text
+            video_id = line.strip()  # Assuming each line contains a single video ID
+            worker = Worker(video_id, settings, total_links, file_counter)
+            q.put(worker)
+            file_counter += 1
 
     # Start each Worker object in the queue, one by one
     while not q.empty():

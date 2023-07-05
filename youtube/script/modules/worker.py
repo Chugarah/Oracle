@@ -15,10 +15,20 @@ from modules.functions import extract_video_id
 
 
 class Worker(threading.Thread):
-    def __init__(self, link):
+    def __init__(self, link, config, total_links, file_counter):
         super().__init__()
         self.link = link
+        self.config = config
+        self.total_links = total_links
+        self.file_counter = file_counter
 
     def run(self):
 
-        print("Worker started")
+        video_id = extract_video_id(self.link)
+        result = FolderScanner.scan_folder(
+            self.config['inputFolder'], ['.webm', '.mp4'])
+
+        if not any(video_id == item[2] for item in result):
+            download_video(self.link, self.config, video_id,
+                           self.total_links, self.file_counter)
+            return

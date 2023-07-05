@@ -19,7 +19,7 @@ def run_subprocess(command):
     )
 
 
-def get_file_info(process, video_id):
+def get_file_info(process, video_id, total_link, file_counter):
     """
     The function `get_file_info` takes in a process and video ID, and uses regular expressions to
     extract information about the progress of downloading comments and videos, updating a progress bar
@@ -50,7 +50,7 @@ def get_file_info(process, video_id):
 
                 # Set progressbar description
                 progress_bar.set_description(
-                    f"Downloading comment page: {page_number}"
+                    f"Downloading comment from video {video_id}  ({file_counter}/{total_link}) page: {page_number}"
                 )
                 # Update progressbar
                 update_progress(progress_bar, current_count, total_count)
@@ -63,7 +63,7 @@ def get_file_info(process, video_id):
 
             # Set progressbar description
             progress_bar.set_description(
-                f"Download video {video_id}:"
+                f"Download video {video_id}: {file_counter}/{total_link}"
             )
 
             # Update progressbar
@@ -130,7 +130,7 @@ def run_subprocess(command):
     )
 
 
-def download_video(video_url, config, video_id):
+def download_video(video_url, config, video_id, total_videos, file_counter):
     """
     The function `download_video` downloads a video from a given URL using yt-dlp, handles potential
     errors and interruptions, and provides progress updates.
@@ -146,9 +146,14 @@ def download_video(video_url, config, video_id):
     command = ["youtube/script/yt-dlp.exe",
                "--config-location", config['config'], video_url]
 
+    # If the user has enabled authentication, add the cookie to the command
+    if config['useAuthCookie'] == "true":
+        command.append("--cookies")
+        command.append(config['authCookie'])
+
     process = run_subprocess(command)
     progress_bar = get_file_info(
-        process, video_id)
+        process, video_id, total_videos, file_counter)
 
     try:
         try:

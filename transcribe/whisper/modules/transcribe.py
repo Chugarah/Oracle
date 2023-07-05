@@ -25,7 +25,7 @@ def run_subprocess(command):
     )
 
 
-def get_file_info(process, file_name, config):
+def get_file_info(process, file_name, config, file_count, total_file):
     """
     The function `get_file_info` retrieves information about the file being processed, such as the
     device being used (CPU or GPU), the total duration of the file, and the current time of the
@@ -94,7 +94,7 @@ def get_file_info(process, file_name, config):
             current_time = convert_time_to_seconds(
                 match_current_time.group(1))
             progress_bar.set_description(
-                f"Transcribing using {device_name}: File {file_name}"
+                f"Transcribing using {device_name}: File {file_name} ({file_count}/{total_file})"
             )
 
             # Update progress bar
@@ -162,6 +162,10 @@ def transcription(config, wave_list):
         # If the file does not exist, then run the transcription
         if not glob.glob(check_file + ".*"):
 
+            file_count = 1
+            total_files = len(file_name)
+            print(total_files)
+
             command = [
                 config['EXEFILE_GPU'],
                 "--device", config['DEVICE'],
@@ -183,7 +187,7 @@ def transcription(config, wave_list):
             # Run the transcription
             process = run_subprocess(command)
             progress_bar = get_file_info(
-                process, file_name, config)
+                process, file_name, config, file_count, total_files)
 
             try:
                 try:

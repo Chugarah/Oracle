@@ -33,8 +33,11 @@ class Worker_whisper(threading.Thread):
                         wave_list.append(
                             (normalized_path, current_folder, file_name_without_extension))
             return wave_list
+
         wave_list = scan_folder(
             self.config['INPUT_DIR'])
+
+        print(len(wave_list))
 
         if (len(wave_list) <= 0):
             print("No wav files found in the input directory to transcribe.")

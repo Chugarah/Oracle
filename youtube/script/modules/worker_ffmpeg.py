@@ -32,33 +32,39 @@ class Worker_ffmpeg(threading.Thread):
         def scan_folder(folder):
             nonlocal totalFiles  # Declare totalFiles as non-local
             webm_files = []
+            m4a_files = []
             for root, dirs, files in os.walk(folder):
                 for file in files:
                     if file.endswith(".webm"):
                         webm_path = os.path.join(root, file)
                         normalized_path = os.path.normpath(webm_path)
                         webm_files.append(normalized_path)
-            totalFiles = len(webm_files)
-            return webm_files, totalFiles
+                    elif file.endswith(".m4a"):
+                        m4a_path = os.path.join(root, file)
+                        normalized_path = os.path.normpath(m4a_path)
+                        m4a_files.append(normalized_path)
+            combined_files = webm_files + m4a_files
+            totalFiles = len(combined_files)
+            return combined_files, totalFiles
 
-        webm_files, totalFiles = scan_folder(
+        combined_files, totalFiles = scan_folder(
             settings['inputFolder'])  # Assign the returned values
 
         mp3_count = len(list(Path(settings['inputFolder']).rglob("*.mp3")))
 
-        totalFiles = len(webm_files)
+        totalFiles = len(combined_files)
         files_to_convert = totalFiles - mp3_count
 
         file_counter = 0
 
-        for webm_file in webm_files:
+        for files in combined_files:
             # GPU Version
-            mp3_file = os.path.splitext(webm_file)[0] + ".mp3"
+            mp3_file = os.path.splitext(files)[0] + ".mp3"
             mp3_file_name = os.path.basename(mp3_file)
 
             if not os.path.exists(mp3_file):
                 file_counter += 1
-                convert_sound(webm_file, mp3_file, "48000",
+                convert_sound(files, mp3_file, "48000",
                               mp3_file_name, files_to_convert, file_counter)
 
         if files_to_convert == 0:
