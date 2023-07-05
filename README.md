@@ -24,8 +24,15 @@ Because we are using Conda, its good to install and prepare the environment for 
 
 ```powershell
 conda create -n oracle python=3.11
+```
+
+Activate the environment
+
+```powershell
 conda activate oracle
 ```
+
+
 
 ## What now?
 
