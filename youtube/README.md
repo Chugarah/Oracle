@@ -119,7 +119,7 @@ To enable Cookie auth function you have to edit the file "youtube-settings.json"
 
 If you want to manually create the cookie file, you can do it downloading an google chrome extension called EditThisCookie <https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg/related>
 
-Copy later the values into this website <https://www.cookieconverter.com/> but place your text at the bottom and the result will be display on top "Netscape". Copy that text and paste it in the file "youtube/script/youtube-conf/auth_cookie.txt". I have not tried this option yet, but it should work.
+Copy later the values into this website <https://www.cookieconverter.com/> but place your text at the bottom and the result will be display on top "Netscape". Copy that text and paste it in the file "youtube/script/youtube-conf/auth_cookie.txt". I have not tried this option yet, but it should work. The important note that the format of auth_cookie.txt file should be Netscape cookie format.
 
 ### 8. Final Step, run the script
 
