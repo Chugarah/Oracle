@@ -1,5 +1,14 @@
 {
+    "authentication": "true",
     "config": "youtube/script/youtube-conf/yt-dlp.conf",
+    "configGenerateJson": "youtube/script/youtube-conf/yt-dlp-playlist.conf",
     "inputFolder": "youtube/files/",
-    "jsonFile": "youtube/script/youtube-conf/youtube-links.json"
+    "videoLinks": "youtube/script/youtube-conf/youtube-links.json",
+    "authCookie": "youtube/script/youtube-conf/auth/auth_cookie.txt",
+    "cookieTimerPath": "youtube/script/youtube-conf/auth/cookie_timer.txt",
+    "useAuthCookie": "true",
+    "browser": "chrome",
+    "chromeProfileLocation": "C:/Users/User/AppData/Local/Google/Chrome/User Data",
+    "chromeExeLocation": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "baseSite": "https://www.youtube.com"
 }

@@ -7,6 +7,7 @@ transcribe/whisper/gpu/Models
 /db/MongoDB/.env
 /transcribe/whisper/.cache/
 transcribe/whisper/models
+/youtube/Tools
 *.dll
 *.7z
 *.zip

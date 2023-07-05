@@ -144,7 +144,7 @@ def download_video(video_url, config, video_id):
     specific video
     """
     command = ["youtube/script/yt-dlp.exe",
-               "--config-location", config, video_url]
+               "--config-location", config['config'], video_url]
 
     process = run_subprocess(command)
     progress_bar = get_file_info(

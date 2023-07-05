@@ -1,5 +1,6 @@
 from datetime import timedelta
 import datetime
+import os
 import re
 
 
@@ -67,9 +68,51 @@ def convert_time_to_seconds(time_str):
 
 
 def extract_video_id(url):
+    """
+    The function `extract_video_id` takes a YouTube URL as input and returns the video ID extracted from
+    the URL.
+
+    :param url: The `url` parameter is a string that represents the URL of a YouTube video
+    :return: The function `extract_video_id` returns the video ID extracted from the given URL. If a
+    video ID is found in the URL, it is returned as a string. If no video ID is found, it returns
+    `None`.
+    """
     video_id = re.search(
         r"(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|shorts\/|watch\?v=|watch\?.+&v=))([^\/\?\&]+)", url)
     if video_id:
         return video_id.group(1)
     else:
         return None
+
+
+def is_text_file_empty(file_path):
+    """
+    The function checks if a text file is empty by comparing its size to zero.
+
+    :param file_path: The file path is the location of the text file that you want to check if it is
+    empty or not. It should be a string that specifies the path to the file, including the file name and
+    extension. For example, "C:/Documents/myfile.txt" or "/home/user/myfile.txt
+    :return: a boolean value indicating whether the text file at the given file path is empty or not.
+    """
+    return os.stat(file_path).st_size == 0
+
+
+def check_lowest_expiry(file_path):
+    # Read the contents of the text file and store them in a list
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    # Convert the strings in the list to integers
+    numbers = [int(line.strip()) for line in lines]
+
+    # Find the lowest value in the list
+    lowest = min(numbers)
+
+    # Convert the lowest value to a datetime object
+    lowest_datetime = datetime.datetime.fromtimestamp(lowest)
+
+    # Get the current time
+    now = datetime.datetime.now()
+
+    # Compare the lowest value with the current time and return True or False
+    return lowest_datetime < now

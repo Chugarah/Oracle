@@ -26,7 +26,7 @@ class Worker_ffmpeg(threading.Thread):
 
     def run(self):
         # Move this line above existing_files
-        config, input_folder, json_file = read_settings()
+        settings = read_settings()
         totalFiles = 0
 
         def scan_folder(folder):
@@ -42,9 +42,9 @@ class Worker_ffmpeg(threading.Thread):
             return webm_files, totalFiles
 
         webm_files, totalFiles = scan_folder(
-            input_folder)  # Assign the returned values
+            settings['inputFolder'])  # Assign the returned values
 
-        mp3_count = len(list(Path(input_folder).rglob("*.mp3")))
+        mp3_count = len(list(Path(settings['inputFolder']).rglob("*.mp3")))
 
         totalFiles = len(webm_files)
         files_to_convert = totalFiles - mp3_count

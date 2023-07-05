@@ -21,13 +21,4 @@ class Worker(threading.Thread):
 
     def run(self):
 
-        video_url = self.link['URL']
-        video_id = extract_video_id(video_url)
-
-        config, input_folder, json_file = read_settings()
-
-        result = FolderScanner.scan_folder(input_folder, ['.webm', '.mp4'])
-
-        if not any(video_id == item[2] for item in result):
-            download_video(video_url, config, video_id)
-            return
+        print("Worker started")
