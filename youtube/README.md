@@ -102,45 +102,24 @@ The yt-dlp community recommend an proxy server for better performance. I am usin
 
 ### 8. Authentication for Youtube
 
-This step is optional. If you want to download private videos, you need to authenticate. The authentication is done by cookies. The simple way to do this to extract the cookies from your youtube session using an browser extension called "EditThisCookie". You can download that extension here <https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg/related>.
+This step is optional. If you want to download private videos, you need to authenticate. The authentication is done by cookies. We will use Chrome with default user profile. Its important that you start your Chrome browser and login to youtube. If you are logged in, you can continue with the next step. This is only supported for Windows and Chrome browser.
 
-#### 8.1 Extract Cookies
+The script is using selenium to get the cookies from Chrome. The script will look for the default user profile. If you have multiple user profiles, you have to change the default user profile to the one you want to use.
 
-Download the extension, they are plenty of extension that does what "EditThisCookie" but for this example I selected that extension.
+To enable Cookie auth function you have to edit the file "youtube-settings.json" and change the value of "cookieAuth" to true. The rest does not need editing. By default is off
 
-* Chrome/Edge: <https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg/related>
-
-* Firefox <https://addons.mozilla.org/en-US/firefox/addon/edithiscookie/>
-
-Some general guide on how to use the extension:
-<https://www.youtube.com/watch?v=BnlcPvYAGVA>
-
-When extension is installed, go to youtube.com and check that you are logged in. If you are logged in start the extension and find the button says "Export Cookies".
-
-#### 8.2 Extract Cookies
-
-Now we have to navigate to the folder where the cookies will be stored. The cookies are stored in the folder "youtube/script/youtube-conf/auth/browser_cookie.txt". Open the text file "browser_cookie.txt" and paste in the cookies. Save the file.
-
-It looks something like this:
-
-```text
+```json
 {
-    "domain": ".youtube.com",
-    "expirationDate": 1721038123.786763,
-    "hostOnly": false,
-    "httpOnly": false,
-    "name": "__Secure-3PAPISID",
-    "path": "/",
-    "sameSite": "no_restriction",
-    "secure": true,
-    "session": false,
-    "storeId": "0",
-    "value": "opjew98rh389rhfheuwhior384example",
-    "id": 1
-},
+    "config": "youtube/script/youtube-conf/yt-dlp.conf",
+    "inputFolder": "youtube/files/",
+    "jsonFile": "youtube/script/youtube-conf/youtube-links.json",
+    "cookieAuth": true  // <<---- Thus one
+}
 ```
 
-It will be multiple lines of this, this is small part of the file. Please remember  that that this cookie will expire in 7 days and you need to redo this step 8.1 and 8.2.
+If you want to manually create the cookie file, you can do it downloading an google chrome extension called EditThisCookie <https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg/related>
+
+Copy later the values into this website <https://www.cookieconverter.com/> but place your text at the bottom and the result will be display on top "Netscape". Copy that text and paste it in the file "youtube/script/youtube-conf/auth_cookie.txt". I have not tried this option yet, but it should work.
 
 ### 8. Final Step, run the script
 

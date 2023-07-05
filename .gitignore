@@ -8,6 +8,7 @@ transcribe/whisper/gpu/Models
 /transcribe/whisper/.cache/
 transcribe/whisper/models
 /youtube/Tools
+/youtube/script/youtube-conf/youtube-settings copy.json
 *.dll
 *.7z
 *.zip
