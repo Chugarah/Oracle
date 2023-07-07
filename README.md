@@ -8,7 +8,7 @@ YouTube Downloader: Found inside the "youtube" folder, this module facilitates e
 
 Transcriber (Whisper): Located in the "transcribe" folder, this module offers seamless transcription functionality using Faster-Whisper.
 
-The primary goal of Oracle is to create a modular framework that streamlines the process of downloading YouTube videos and transcribing their contents. It leverages Conda to create a virtual environment and relies on Python 3.9.6 for its implementation.
+The primary goal of Oracle is to create a modular framework that streamlines the process of downloading YouTube videos and transcribing their contents. It leverages Conda to create a virtual environment and relies on Python 3.11 for its implementation.
 
 Each component of the project is accompanied by a detailed README.md file, providing step-by-step instructions for installation and usage. It is important to note that all modules require the prior installation and configuration of Conda.
 
