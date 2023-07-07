@@ -17,6 +17,8 @@ regex_device_gpu = re.compile(r"GPU #(\d+): (.+)")
 regex_device_cpu = re.compile(r"CPU: (.+)")
 regex_download_model = re.compile(
     r"Downloading[^:]+:\s+\d+%\|[^|]+\|\s+(\d+\.\d+[A-Z]+)\/(\d+\.\d+[A-Z]+)")
+# This is the regex pattern that matches the error message
+regex_no_speech_threshold = re.compile(r"No speech threshold is met")
 
 
 def run_subprocess(command):
@@ -25,7 +27,7 @@ def run_subprocess(command):
     )
 
 
-def get_file_info(process, file_name, config, file_count, total_file):
+def get_file_info(process, file_name, config, file_count, files_to_transcribe):
     """
     The function `get_file_info` retrieves information about the file being processed, such as the
     device being used (CPU or GPU), the total duration of the file, and the current time of the
@@ -44,8 +46,10 @@ def get_file_info(process, file_name, config, file_count, total_file):
     current_time = None
     device_name = None
     progress_bar = tqdm(total=100, position=0, leave=True, dynamic_ncols=True)
+    close_progress_bar = False
 
     for line in process.stdout:
+        # This line is for debugging purposes
         # print(line)
 
         if config['DEVICE'] == "cpu":
@@ -94,11 +98,21 @@ def get_file_info(process, file_name, config, file_count, total_file):
             current_time = convert_time_to_seconds(
                 match_current_time.group(1))
             progress_bar.set_description(
-                f"Transcribing using {device_name}: File {file_name} ({file_count}/{total_file})"
+                f"Transcribing using {device_name}: File {file_name} ({file_count}/{files_to_transcribe})"
             )
-
             # Update progress bar
             update_progress(progress_bar, current_time, total_duration_var)
+
+        # Match no speech threshold
+        if match_speech_threshold := regex_no_speech_threshold.search(line):
+            close_progress_bar = True
+
+    # Update progress bar
+    if (close_progress_bar):
+        progress_bar.set_description(
+            f"No speech detected, skipping file {file_name} ({file_count}/{files_to_transcribe})"
+        )
+        progress_bar.update(100 - progress_bar.n)
 
     return progress_bar
 
@@ -133,7 +147,7 @@ def run_subprocess(command):
     )
 
 
-def transcription(config, wave_list):
+def transcription(config, wave_list, files_to_transcribe):
     """
     The function `transcription` transcribes a list of wave files using a specified configuration.
 
@@ -144,6 +158,7 @@ def transcription(config, wave_list):
     wave file to be transcribed. Each tuple in the list contains three elements:
     """
     check_file = None
+    file_count = 1
 
     for wavefile, current_folder, file_name in wave_list:
         whisper_folder = os.path.join(
@@ -161,11 +176,6 @@ def transcription(config, wave_list):
 
         # If the file does not exist, then run the transcription
         if not glob.glob(check_file + ".*"):
-
-            file_count = 1
-            total_files = len(file_name)
-            print(total_files)
-
             command = [
                 config['EXEFILE_GPU'],
                 "--device", config['DEVICE'],
@@ -184,10 +194,20 @@ def transcription(config, wave_list):
                 command.append("--vad_filter")
                 command.append("true")
 
+            # Add the BEEP flag if it is enabled
+            if config['BEEP_SOUND']:
+                command.append("--beep")
+                command.append("true")
+            else:
+                command.append("--beep")
+                command.append("false")
+
             # Run the transcription
             process = run_subprocess(command)
             progress_bar = get_file_info(
-                process, file_name, config, file_count, total_files)
+                process, file_name, config, file_count, files_to_transcribe)
+            # Add file counter to the list of files to transcribe
+            file_count += 1
 
             try:
                 try:

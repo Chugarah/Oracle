@@ -13,3 +13,4 @@ transcribe/whisper/models
 *.7z
 *.zip
 *.pyc
+transcribe/whisper/modules/__pycache__/

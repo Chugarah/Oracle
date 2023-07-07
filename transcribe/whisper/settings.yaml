@@ -20,6 +20,8 @@ MAX_LINE_WIDTH: 100
 DEBUG: false
 # No timestamp printed in output txt file
 WORD_TIMESTAMPS: true
+# Adds beeping sound when progress is complete. By default its disabled
+BEEP_SOUND: false
 ######################### BASIC CONFIGURATION #########################
 
 ######################### FOLDER CONFIGURATION #########################

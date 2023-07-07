@@ -34,12 +34,22 @@ class Worker_whisper(threading.Thread):
                             (normalized_path, current_folder, file_name_without_extension))
             return wave_list
 
+        def count_whisper_folders(folder):
+            folder_counter = 0
+            for root, dirs, files in os.walk(folder):
+                for dir_name in dirs:
+                    if dir_name.lower() == "whisper":
+                        folder_counter += 1
+            return folder_counter
+
         wave_list = scan_folder(
             self.config['INPUT_DIR'])
+        total_folders = count_whisper_folders(self.config['INPUT_DIR'])
 
-        print(len(wave_list))
+        total_files = len(wave_list)
+        files_to_transcribe = total_files - total_folders
 
-        if (len(wave_list) <= 0):
+        if (files_to_transcribe <= 0):
             print("No wav files found in the input directory to transcribe.")
         else:
-            transcription(self.config, wave_list)
+            transcription(self.config, wave_list, files_to_transcribe)
