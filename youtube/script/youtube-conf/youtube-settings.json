@@ -1,5 +1,5 @@
 {
-    "authentication": "true",
+    "authentication": "false",
     "config": "youtube/script/youtube-conf/yt-dlp.conf",
     "browser": "chrome",
     "videoLinks": "youtube/script/youtube-conf/video_links.txt",
@@ -8,7 +8,7 @@
     "inputFolder": "youtube/files/",
     "authCookie": "youtube/script/youtube-conf/auth/auth_cookie.txt",
     "cookieTimerPath": "youtube/script/youtube-conf/auth/cookie_timer.txt",
-    "chromeProfileLocation": "C:/Users/GeorgiSundberg/AppData/Local/Google/Chrome/User Data",
+    "chromeProfileLocation": "C:/Users/User/AppData/Local/Google/Chrome/User Data",
     "chromeExeLocation": "C:/Program Files/Google/Chrome/Application/chrome.exe",
     "baseSite": "https://www.youtube.com"
 }
