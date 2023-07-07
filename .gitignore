@@ -14,3 +14,5 @@ transcribe/whisper/models
 *.zip
 *.pyc
 transcribe/whisper/modules/__pycache__/
+youtube/script/youtube-conf/auth/auth_cookie.txt
+youtube/script/youtube-conf/auth/cookie_timer.txt

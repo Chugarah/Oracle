@@ -37,7 +37,7 @@ conda install -c conda-forge ffmpeg
 pip install -r .\youtube\script\requirements.txt
 ```
 
-### 4. Update Yt-dlp
+### 4. Update Yt-dlp (Optional)
 
 This step is optional. If you want to update yt-dlp to the latest version, run the following command:
 
@@ -49,28 +49,50 @@ This step is optional. If you want to update yt-dlp to the latest version, run t
 
 We need to set path from where where we want to store the files and where we should convert it from using FFmpeg. We need to edit the following files: They are inside youtube-conf folder
 
-1. youtube-links.json. Just add the links as example bellow and save the file.
+1. video_links.txt. This file is where you put your youtube links or playlist. Look at the example below. The example below is 10 videos from The Kiffness <https://www.youtube.com/channel/UCFy846QdKs3LbLgBpSqPcdg>
 
-    ```json
-    [
-        {
-        "URL": "https://www.youtube.com/watch?v=LXb3EKWsInQ"
-        },
-        {
-        "URL": "https://www.youtube.com/shorts/GbcVJEuOjqc"
-        }
-    ]
+    ```txt
+    https://www.youtube.com/watch?v=JjBRlnO6LvA&list=PLqWxGh_2yxf_xCKNnYXfGpD10EBEv7p2Y
+    https://www.youtube.com/watch?v=2DRSEQ5JBic
     ```
 
 2. youtube-settings.json. The "inputFolder" is where the FFmpeg will look for files to convert. The rest does not need editing
 
     ```json
     {
+        "authentication": "false",
         "config": "youtube/script/youtube-conf/yt-dlp.conf",
-        "inputFolder": "youtube/files/",  // is where the FFmpeg will look for sound files to convert
-        "jsonFile": "youtube/script/youtube-conf/youtube-links.json"
+        "browser": "chrome",
+        "videoLinks": "youtube/script/youtube-conf/video_links.txt",
+        "playListVideoRaw": "youtube/script/youtube-conf/playlist-links-parser.txt",
+        "linkReader": "youtube/script/youtube-conf/link-reader.txt",
+        "inputFolder": "youtube/files/",
+        "authCookie": "youtube/script/youtube-conf/auth/auth_cookie.txt",
+        "cookieTimerPath": "youtube/script/youtube-conf/auth/cookie_timer.txt",
+        "chromeProfileLocation": "C:/Users/User/AppData/Local/Google/Chrome/User Data",
+        "chromeExeLocation": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "baseSite": "https://www.youtube.com"
     }
     ```
+
+    Detail explanation of each line:
+
+    | Key                   | Description                                                                                                                                                                                                                          |
+    | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | authentication        | Enable this to use Cookie authentication                                                                                                                                                                                             |
+    | config                | The configuration file for yt-dlp.exe location                                                                                                                                                                                       |
+    | browser               | Which browser to open for to refresh our cookie authentication. Oracle supports Chrome only for the moment                                                                                                                           |
+    | videoLinks            | This is the file you add your video links or playlist links.                                                                                                                                                                         |
+    | playListVideoRaw      | This is file where the raw output from our yt-dlp.exe is being parsed from. This file should not be edited                                                                                                                           |
+    | linkReader            | This file is the same as playListVideoRaw, just an file to be parsed. Should not be edited                                                                                                                                           |
+    | inputFolder           | This is the folder where FFmpeg will look and also our location where we store our youtube content                                                                                                                                   |
+    | authCookie            | Place where your cookie data will be stored, please don't edit this                                                                                                                                                                  |
+    | cookieTimerPath       | Place where the cookie timer will be stored, please don't edit this                                                                                                                                                                  |
+    | chromeProfileLocation | This is the location of your chrome profile. This is used to get the cookie data. This is default storage for default user and for windows. Based if you have multiple profiles you need to change this to the profile you are using |
+    | chromeExeLocation     | This is the location of your chrome.exe. This is used to open chrome to refresh the cookie. That is the default location if you don't install it in custom location. data                                                            |
+    | baseSite              | This is the base site for youtube. I use .com but can be anything based on your preference but it need to be youtube. this                                                                                                           | ' |
+
+    The line is that good to start is "inputFolder". This is where you place the path to the folder where you want to store the files. The rest does not need editing. If you want to test or satisfied with current settings the only line needs editing is where you place the path to the folder where you want to store the files.
 
 3. yt-dlp.conf. This is the main conf file for yt-dlp. More detail information can be found <https://github.com/yt-dlp/yt-dlp#general-options>. This settings that I provided in this modules, download the best quality video and audio and then merge them together. It also download the best audio quality.The rest does not need editing. If you want to test or satisfied with current settings the only line needs editing is where you place the path to the folder where you want to store the files.
 
@@ -81,14 +103,44 @@ We need to set path from where where we want to store the files and where we sho
     The lines we are interested in editing is:
 
     ```config
+
+    # This is a complete guess, but I think YTDLP pretends to be a normal web browser fetching videos from YouTube' servers. 
+    # As such, YT would have no reason to stop lots of downloads from YTDLP as much as it would stop someone from playing 40 
+    # chrome tabs of YouTube videos all at once.
+
+    # Download the highest video resolution and best audio quality in separate formats and then merge them. You can change this to your liking. 
+    # And also download the best audio separately.
+    -f "bestvideo+bestaudio/best,bestaudio"
+
     # Save all videos under specified directory with structured organization by channel, year, month, and id
     -o youtube/files/%(channel_id)s/%(upload_date>%Y)s/%(upload_date>%m)s/%(id)s/%(id)s.%(ext)s
-    
-    # Disable this by putting an # in front of the line
-    --write-comments
 
-    # Set rate limit to 10 MB/s, change this to whatever you want
-    --limit-rate 10000K
+    # Download English subtitles, descriptions, comments, thumbnails, links, etc.
+    --sub-lang en
+    --write-auto-subs
+    --write-description
+    --write-info-json
+    #--write-comments
+    --write-thumbnail
+    --write-link
+    --embed-thumbnail
+    --embed-metadata
+    --embed-chapters
+    --embed-info-json
+
+    # Maintain rate limiting as before
+    --min-sleep-interval 5
+    --max-sleep-interval 15
+
+    # Include progress in output, please don't touch this, this is to update the progress bar
+    --progress
+
+    # Set rate limit to 0.5 MB/s, change this to whatever you want
+    --limit-rate 25000K
+
+    # Use local proxy, this is optional, but recommended for better performance
+    --proxy 127.0.0.1:8118
+
     ```
 
 ### 6. Install Proxy Server
@@ -110,10 +162,18 @@ To enable Cookie auth function you have to edit the file "youtube-settings.json"
 
 ```json
 {
+    "authentication": "false", <---- Change this to true to enable to activate authentication
     "config": "youtube/script/youtube-conf/yt-dlp.conf",
+    "browser": "chrome",
+    "videoLinks": "youtube/script/youtube-conf/video_links.txt",
+    "playListVideoRaw": "youtube/script/youtube-conf/playlist-links-parser.txt",
+    "linkReader": "youtube/script/youtube-conf/link-reader.txt",
     "inputFolder": "youtube/files/",
-    "jsonFile": "youtube/script/youtube-conf/youtube-links.json",
-    "cookieAuth": true  // <<---- Thus one
+    "authCookie": "youtube/script/youtube-conf/auth/auth_cookie.txt",
+    "cookieTimerPath": "youtube/script/youtube-conf/auth/cookie_timer.txt",
+    "chromeProfileLocation": "C:/Users/User/AppData/Local/Google/Chrome/User Data",
+    "chromeExeLocation": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "baseSite": "https://www.youtube.com"
 }
 ```
 

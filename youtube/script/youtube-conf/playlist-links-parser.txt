@@ -1,0 +1,52 @@
+[debug] Command-line config: ['--get-url', '--flat-playlist', '--verbose', '--skip-download', '--no-warnings', 'https://www.youtube.com/watch?v=2DRSEQ5JBic', '--cookies', 'youtube/script/youtube-conf/auth/auth_cookie.txt']
+
+[debug] Encodings: locale cp1252, fs utf-8, pref cp1252, out cp1252 (No VT), error cp1252 (No VT), screen cp1252 (No VT)
+
+[debug] yt-dlp version stable@2023.06.22 [812cdfa06] (win_exe)
+
+[debug] Python 3.8.10 (CPython AMD64 64bit) - Windows-10-10.0.22624-SP0 (OpenSSL 1.1.1k  25 Mar 2021)
+
+[debug] exe versions: ffmpeg 4.3.1, ffprobe 4.3.1
+
+[debug] Optional libraries: Cryptodome-3.18.0, brotli-1.0.9, certifi-2023.05.07, mutagen-1.46.0, sqlite3-2.6.0, websockets-11.0.3
+
+[debug] Proxy map: {}
+
+[debug] Loaded 1851 extractors
+
+[youtube] Extracting URL: https://www.youtube.com/watch?v=2DRSEQ5JBic
+
+[youtube] 2DRSEQ5JBic: Downloading webpage
+
+[debug] [youtube] Extracted SAPISID cookie
+
+[youtube] 2DRSEQ5JBic: Downloading ios player API JSON
+
+[youtube] 2DRSEQ5JBic: Downloading android player API JSON
+
+[debug] [youtube] Extracting signature function js_1dda5629_107
+
+[debug] Loading youtube-sigfuncs.js_1dda5629_107 from cache
+
+[debug] Loading youtube-nsig.1dda5629 from cache
+
+[debug] [youtube] Decrypted nsig _owBWFp2LPbi9MmB => 1kzrB02fu6g1sQ
+
+[debug] [youtube] Extracting signature function js_1dda5629_103
+
+[debug] Loading youtube-sigfuncs.js_1dda5629_103 from cache
+
+[youtube] 2DRSEQ5JBic: Downloading m3u8 information
+
+[debug] Sort order given by extractor: quality, res, fps, hdr:12, source, vcodec:vp9.2, channels, acodec, lang, proto
+
+[debug] Formats sorted by: hasvid, ie_pref, quality, res, fps, hdr:12(7), source, vcodec:vp9.2(10), channels, acodec, lang, proto, size, br, asr, vext, aext, hasaud, id
+
+[debug] Default format spec: bestvideo*+bestaudio/best
+
+[info] 2DRSEQ5JBic: Downloading 1 format(s): 315+251
+
+https://rr6---sn-jvhixh-5go6.googlevideo.com/videoplayback?expire=1688775572&ei=NFeoZOnKC4KvyQWVypSgBg&ip=90.141.62.55&id=o-AJe23gGP5W1OWtoZrIBE2jx_bsCIWL4hmGkKBDHb-wsw&itag=315&source=youtube&requiressl=yes&mh=c7&mm=31%2C26&mn=sn-jvhixh-5go6%2Csn-5hnednss&ms=au%2Conr&mv=m&mvi=6&pcm2cms=yes&pl=22&ctier=A&pfa=5&initcwndbps=2617500&hightc=yes&siu=1&vprv=1&svpuc=1&mime=video%2Fwebm&gir=yes&clen=111167462&dur=61.160&lmt=1688670187968227&mt=1688753573&fvip=4&keepalive=yes&fexp=24007246%2C51000022&c=IOS&txp=4432434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cctier%2Cpfa%2Chightc%2Csiu%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRQIgT3dzHHxUaY3xJM89PbtnRpe4yZxu_oHjqAt9H324fdkCIQDMc3LfbldnCheQ3ppkerc5S8TuTK58MzNi7sw8EANqQg%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpcm2cms%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRQIhAK_mx4n6ZTE8VDmewj8DSLl5nRV-HPaXN0tyGVRfTnajAiAbtX2A3K5VoDW70XGUNo5Ic_Y1ebV3njurvUrf88Q5Mw%3D%3D
+
+https://rr6---sn-jvhixh-5go6.googlevideo.com/videoplayback?expire=1688775572&ei=NFeoZIbRFMiO0u8P1Z-w-AY&ip=90.141.62.55&id=o-AMjFERgndhrUurIOejpKjgmi0kMHE-ZwNvt5CjS1M4AU&itag=251&source=youtube&requiressl=yes&mh=c7&mm=31%2C26&mn=sn-jvhixh-5go6%2Csn-5hnednss&ms=au%2Conr&mv=m&mvi=6&pl=22&initcwndbps=2617500&siu=1&spc=Ul2Sq1yooM1V1HEhUIa7-zhA9OK-kYFqm7470k6m9-1t&vprv=1&svpuc=1&mime=audio%2Fwebm&gir=yes&clen=1069969&dur=61.181&lmt=1688667519948918&mt=1688753573&fvip=4&keepalive=yes&fexp=24007246%2C51000022&c=ANDROID&txp=4432434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Csiu%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRQIhAI_rJJwhUCHwKnKaWNhsXgsYtDxgJJm3gJ0YztCvml0PAiA9wzAsLToZA6WWnLkP8hTogJq2zJGeMzXz6WT7OAIcvQ%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRAIgWiLwBOl8OOnx4Eots5vX0Dk6bHBxa3Ky6Cq1kJZI3SoCICcmGezGEfaB-Aj87_Z0o_LIKTQPNNHP8VMTJHWsOh_z
+

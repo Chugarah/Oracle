@@ -25,7 +25,7 @@ def main():
         worker.join()  # wait for the current thread to complete
 
     # Open the text file
-    with open(settings['videoLinks'], 'r') as f:
+    with open(settings['linkReader'], 'r') as f:
         # Read the file line by line
         total_links = len(f.readlines())
         f.seek(0)  # Reset file pointer to the beginning

@@ -2,6 +2,7 @@ from datetime import timedelta
 import datetime
 import os
 import re
+import subprocess
 
 
 def datetime_to_float(d):
@@ -97,6 +98,16 @@ def is_text_file_empty(file_path):
     return os.stat(file_path).st_size == 0
 
 
+def create_file_if_not_exists(file_path):
+    if os.path.exists(file_path):
+        return 'File already exists'
+
+    with open(file_path, 'w') as file:
+        pass
+
+    return 'File created successfully'
+
+
 def check_lowest_expiry(file_path):
     # Read the contents of the text file and store them in a list
     with open(file_path, 'r') as file:
@@ -116,3 +127,40 @@ def check_lowest_expiry(file_path):
 
     # Compare the lowest value with the current time and return True or False
     return lowest_datetime < now
+
+
+def run_subprocess(command):
+    """
+    The function `run_subprocess` runs a command as a subprocess and returns the output.
+
+    :param command: The `command` parameter is a string that represents the command you want to run in
+    the subprocess. It can be any valid command that you would normally run in a terminal or command
+    prompt
+    :return: a tuple containing the output and the error (output, error)
+    """
+    with subprocess.Popen(
+        command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
+    ) as process:
+        output, error = process.communicate()
+    return output, error
+
+
+def read_file(file_path):
+    """
+    The function `read_file` reads the contents of a file and prints each line, or prints a message if
+    the file is empty or does not exist.
+
+    :param file_path: The file path is a string that specifies the location of the file you want to
+    read. It should include the file name and extension. For example,
+    "C:/Users/username/Documents/file.txt" or "data/file.csv"
+    """
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            if len(lines) == 0:
+                print("The file is empty.")
+            else:
+                for line in lines:
+                    print(line.strip())
+    except FileNotFoundError:
+        print("The file does not exist.")

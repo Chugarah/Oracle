@@ -147,7 +147,7 @@ def download_video(video_url, config, video_id, total_videos, file_counter):
                "--config-location", config['config'], video_url]
 
     # If the user has enabled authentication, add the cookie to the command
-    if config['useAuthCookie'] == "true":
+    if config['authentication'] == "true":
         command.append("--cookies")
         command.append(config['authCookie'])
 
