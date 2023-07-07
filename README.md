@@ -1,22 +1,20 @@
-# Oracle (Work In Progress)
+# Introducing Oracle: A Modular Project for Downloading and Transcribing YouTube Videos
 
-Ever wanted to download youtube video?, ever wanted to have an nice back-end files structure for your favorite youtube videos?. Presenting Oracle project.
+Oracle is a project designed to provide a convenient solution for downloading and transcribing YouTube videos. It utilizes the yt-dlp tool for video downloads and Faster-Whisper for transcription. The project is developed using Python and Conda, with the objective of ensuring compatibility with both Windows and Linux operating systems.
 
-This project is using yt-dlp to download youtube videos and then transcribe them with Faster-Whisper. The project is using Python and Conda. The step of the project is to get it to work in Windows and then Linux.
+The project comprises three distinct components:
 
-The project is modular and contains three components:
+YouTube Downloader: Found inside the "youtube" folder, this module facilitates easy downloading of YouTube videos.
 
-1. Youtube downloader (Go inside youtube folder)
-2. Transcriber (Whisper) (Go inside transcribe folder)
+Transcriber (Whisper): Located in the "transcribe" folder, this module offers seamless transcription functionality using Faster-Whisper.
 
-The goal is to create an modular project that can be used to download youtube videos and then transcribe them. The project is using Conda to create an virtual environment. The project is using Python 3.9.6.
+The primary goal of Oracle is to create a modular framework that streamlines the process of downloading YouTube videos and transcribing their contents. It leverages Conda to create a virtual environment and relies on Python 3.9.6 for its implementation.
 
-Each project has its own README.md file and step by step instructions on how to install and use the project.
-All of the modules requires Conda to be installed and configured.
+Each component of the project is accompanied by a detailed README.md file, providing step-by-step instructions for installation and usage. It is important to note that all modules require the prior installation and configuration of Conda.
 
-The project is using Conda to create an virtual environment for the project. Download and install Conda <https://docs.conda.io/en/latest/miniconda.html>
+To begin using Oracle, please ensure Conda is installed and configured on your system. You can download and install Conda from this link: Conda Installation Guide
 
-Good luck and enjoy :D
+Wishing you the best of luck and a delightful experience with Oracle!
 
 ## Base
 
