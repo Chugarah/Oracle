@@ -1,6 +1,4 @@
-import argparse
 import re
-import json
 import http.cookiejar
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService

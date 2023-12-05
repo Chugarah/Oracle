@@ -37,12 +37,14 @@ conda install -c conda-forge ffmpeg
 pip install -r .\youtube\script\requirements.txt
 ```
 
-### 4. Update Yt-dlp (Optional)
+### 4. Update Yt-dlp (Optional) &  Conda Packages
 
-This step is optional. If you want to update yt-dlp to the latest version, run the following command:
+This step is optional. If you want to update yt-dlp to the latest. version, run the following command:
 
 ```powershell
 .\youtube\script\yt-dlp.exe -U
+conda update --all
+conda install -c conda-forge --update-deps webdriver-manager
 ```
 
 ### 5. Edit some configuration files
