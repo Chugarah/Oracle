@@ -1,0 +1,16 @@
+######################### BASIC CONFIGURATION ##########################
+# If you want to use custom location for your whisper files
+CUSTOM_WHISPER_DIR: false
+######################### BASIC CONFIGURATION ##########################
+
+######################### FOLDER CONFIGURATION #########################
+# Directories for input and output files
+# Input directory should contain .wav files 16kHz
+# Output directory will result from the transcription
+# The output directory name will be created in the same directory wave files are located
+INPUT_DIR: "youtube/files"
+# This option gives you the possibility to change where to read files from if your whisper 
+# files are located somewhere else
+WHISPER_DIR: "youtube/test"
+JSON_SCAN: "info.json"
+######################### FOLDER CONFIGURATION #########################

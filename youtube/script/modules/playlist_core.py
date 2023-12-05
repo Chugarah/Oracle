@@ -219,7 +219,7 @@ class PlayListCore:
             url_only_pattern = r"^(https://www\.youtube\.com/watch\?v=[^\n&]+)$"
 
             # This pattern matches lines starting with "[youtube] Extracting URL: "
-            youtube_extract_pattern = r"^\[youtube\] Extracting URL: (https://www\.youtube\.com/watch\?v=[^\n&]+)"
+            youtube_extract_pattern = r"^\[youtube\] Extracting URL: (https://www\.youtube\.com/(?:watch\?v=|shorts/)[^\n&]+)"
 
             with open(input_file, 'r') as file:
                 lines = file.readlines()

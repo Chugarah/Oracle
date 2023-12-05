@@ -29,7 +29,7 @@ BEEP_SOUND: false
 # Input directory should contain .wav files 16kHz
 # Output directory will result from the transcription
 # The output directory name will be created in the same directory wave files are located
-INPUT_DIR: "youtube/files"
+INPUT_DIR: "R:/"
 # This you want have your custom output directory
 # If is this set to false it needs youtube download module to be installed
 OUTPUT_DIR_ACTIVATION: false

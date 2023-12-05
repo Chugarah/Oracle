@@ -29,6 +29,6 @@ class Worker(threading.Thread):
             self.config['inputFolder'], ['.webm', '.mp4'])
 
         if not any(video_id == item[2] for item in result):
-             download_video(self.link, self.config, video_id,
-                          self.total_links, self.file_counter)
+            download_video(self.link, self.config, video_id,
+                           self.total_links, self.file_counter)
         return

@@ -120,7 +120,7 @@ We need to set path from where where we want to store the files and where we sho
     --write-auto-subs
     --write-description
     --write-info-json
-    #--write-comments
+    --write-comments
     --write-thumbnail
     --write-link
     --embed-thumbnail

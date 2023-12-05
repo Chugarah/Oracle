@@ -1,4 +1,3 @@
-import json
 import queue
 from modules.worker import Worker
 from modules.worker_ffmpeg import Worker_ffmpeg

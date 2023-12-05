@@ -1,4 +1,4 @@
-[debug] Command-line config: ['--get-url', '--flat-playlist', '--verbose', '--skip-download', '--no-warnings', 'https://www.youtube.com/watch?v=2DRSEQ5JBic', '--cookies', 'youtube/script/youtube-conf/auth/auth_cookie.txt']
+[debug] Command-line config: ['--get-url', '--flat-playlist', '--verbose', '--skip-download', '--no-warnings', 'https://www.youtube.com/shorts/Xj6cAnW4WeE']
 
 [debug] Encodings: locale cp1252, fs utf-8, pref cp1252, out cp1252 (No VT), error cp1252 (No VT), screen cp1252 (No VT)
 
@@ -14,29 +14,23 @@
 
 [debug] Loaded 1851 extractors
 
-[youtube] Extracting URL: https://www.youtube.com/watch?v=2DRSEQ5JBic
+[youtube] Extracting URL: https://www.youtube.com/shorts/Xj6cAnW4WeE
 
-[youtube] 2DRSEQ5JBic: Downloading webpage
+[youtube] Xj6cAnW4WeE: Downloading webpage
 
-[debug] [youtube] Extracted SAPISID cookie
+[youtube] Xj6cAnW4WeE: Downloading ios player API JSON
 
-[youtube] 2DRSEQ5JBic: Downloading ios player API JSON
+[youtube] Xj6cAnW4WeE: Downloading android player API JSON
 
-[youtube] 2DRSEQ5JBic: Downloading android player API JSON
+[youtube] Xj6cAnW4WeE: Downloading iframe API JS
 
-[debug] [youtube] Extracting signature function js_1dda5629_107
+[youtube] Xj6cAnW4WeE: Downloading player 31e0b6d9
 
-[debug] Loading youtube-sigfuncs.js_1dda5629_107 from cache
+[youtube] Xj6cAnW4WeE: Downloading web player API JSON
 
-[debug] Loading youtube-nsig.1dda5629 from cache
+[youtube] Xj6cAnW4WeE: Downloading m3u8 information
 
-[debug] [youtube] Decrypted nsig _owBWFp2LPbi9MmB => 1kzrB02fu6g1sQ
-
-[debug] [youtube] Extracting signature function js_1dda5629_103
-
-[debug] Loading youtube-sigfuncs.js_1dda5629_103 from cache
-
-[youtube] 2DRSEQ5JBic: Downloading m3u8 information
+[youtube] Xj6cAnW4WeE: Downloading initial data API JSON
 
 [debug] Sort order given by extractor: quality, res, fps, hdr:12, source, vcodec:vp9.2, channels, acodec, lang, proto
 
@@ -44,9 +38,9 @@
 
 [debug] Default format spec: bestvideo*+bestaudio/best
 
-[info] 2DRSEQ5JBic: Downloading 1 format(s): 315+251
+[info] Xj6cAnW4WeE: Downloading 1 format(s): 247+251
 
-https://rr6---sn-jvhixh-5go6.googlevideo.com/videoplayback?expire=1688775572&ei=NFeoZOnKC4KvyQWVypSgBg&ip=90.141.62.55&id=o-AJe23gGP5W1OWtoZrIBE2jx_bsCIWL4hmGkKBDHb-wsw&itag=315&source=youtube&requiressl=yes&mh=c7&mm=31%2C26&mn=sn-jvhixh-5go6%2Csn-5hnednss&ms=au%2Conr&mv=m&mvi=6&pcm2cms=yes&pl=22&ctier=A&pfa=5&initcwndbps=2617500&hightc=yes&siu=1&vprv=1&svpuc=1&mime=video%2Fwebm&gir=yes&clen=111167462&dur=61.160&lmt=1688670187968227&mt=1688753573&fvip=4&keepalive=yes&fexp=24007246%2C51000022&c=IOS&txp=4432434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cctier%2Cpfa%2Chightc%2Csiu%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRQIgT3dzHHxUaY3xJM89PbtnRpe4yZxu_oHjqAt9H324fdkCIQDMc3LfbldnCheQ3ppkerc5S8TuTK58MzNi7sw8EANqQg%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpcm2cms%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRQIhAK_mx4n6ZTE8VDmewj8DSLl5nRV-HPaXN0tyGVRfTnajAiAbtX2A3K5VoDW70XGUNo5Ic_Y1ebV3njurvUrf88Q5Mw%3D%3D
+https://rr3---sn-jvhixh-5gor.googlevideo.com/videoplayback?expire=1701776585&ei=abhuZdHjE9OCv_IPreGe0AE&ip=90.142.50.11&id=o-AFii3QTQF5Ca6Se3nn3d1D8qaeGmoWs6e8ES5oG-xuiW&itag=247&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&mh=T5&mm=31%2C26&mn=sn-jvhixh-5gor%2Csn-5hne6nz6&ms=au%2Conr&mv=m&mvi=3&pl=20&initcwndbps=1362500&vprv=1&svpuc=1&mime=video%2Fwebm&gir=yes&clen=1108148&dur=15.015&lmt=1678371025230264&mt=1701754140&fvip=5&keepalive=yes&fexp=24007246&c=IOS&txp=631A224&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=ANLwegAwRgIhAM0We18eKJv9vHfkpdKMZBL1QD-OqN5XQdwmaK2zeHVIAiEA3XlJv-avY8EZaYJP6sW1ygY4_Jcy9QT-7GEEVf0087U%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AM8Gb2swRAIgL7Cv0nLL3dCtzbHn4BZlVLiQntDweT8p3AUVRMq4u3gCIGIKwOJERzooPYBlqeDnoEZr-mUdPWzsURgdOoqGNH8I
 
-https://rr6---sn-jvhixh-5go6.googlevideo.com/videoplayback?expire=1688775572&ei=NFeoZIbRFMiO0u8P1Z-w-AY&ip=90.141.62.55&id=o-AMjFERgndhrUurIOejpKjgmi0kMHE-ZwNvt5CjS1M4AU&itag=251&source=youtube&requiressl=yes&mh=c7&mm=31%2C26&mn=sn-jvhixh-5go6%2Csn-5hnednss&ms=au%2Conr&mv=m&mvi=6&pl=22&initcwndbps=2617500&siu=1&spc=Ul2Sq1yooM1V1HEhUIa7-zhA9OK-kYFqm7470k6m9-1t&vprv=1&svpuc=1&mime=audio%2Fwebm&gir=yes&clen=1069969&dur=61.181&lmt=1688667519948918&mt=1688753573&fvip=4&keepalive=yes&fexp=24007246%2C51000022&c=ANDROID&txp=4432434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Csiu%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=AOq0QJ8wRQIhAI_rJJwhUCHwKnKaWNhsXgsYtDxgJJm3gJ0YztCvml0PAiA9wzAsLToZA6WWnLkP8hTogJq2zJGeMzXz6WT7OAIcvQ%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRAIgWiLwBOl8OOnx4Eots5vX0Dk6bHBxa3Ky6Cq1kJZI3SoCICcmGezGEfaB-Aj87_Z0o_LIKTQPNNHP8VMTJHWsOh_z
+https://rr3---sn-jvhixh-5gor.googlevideo.com/videoplayback?expire=1701776585&ei=abhuZZ3MG-7Pv_IP_9i2aA&ip=90.142.50.11&id=o-APbiyjIBMwMugcPyoNYf7NEcK9oORaEkDHHxpJcNj7LH&itag=251&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&mh=T5&mm=31%2C26&mn=sn-jvhixh-5gor%2Csn-5hnekn7d&ms=au%2Conr&mv=m&mvi=3&pl=20&initcwndbps=1362500&spc=UWF9fy8-ZlXNSPwveFi9adf-GydJPRk&vprv=1&svpuc=1&mime=audio%2Fwebm&gir=yes&clen=178173&dur=15.041&lmt=1678371024849803&mt=1701754140&fvip=4&keepalive=yes&fexp=24007246&c=ANDROID&txp=6318224&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Cgir%2Cclen%2Cdur%2Clmt&sig=ANLwegAwRQIgYxJ4X0qaYMdPA5xYsCrTkejxzwyT4A_APm0aF0q3-j8CIQDhO4ANKf1q2gTna1xwoDnp2uPp9B2wUciSczlabiGo_A%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AM8Gb2swRQIgPP67JC__aYGfgYe206Hjw56urS6COcUmUz6i4DI0ytYCIQDTwmMz6cWWLUyzKPS-tENGIz7Bo_4VDrYYoGvY_lP-xQ%3D%3D
 
