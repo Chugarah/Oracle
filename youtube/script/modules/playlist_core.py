@@ -130,7 +130,6 @@ class PlayListCore:
         play_list_name = None
         play_list_total_items = 0
         play_list_current_item = 0
-        file_name = "youtube-links.json"
         process = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
         )

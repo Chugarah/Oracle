@@ -86,6 +86,16 @@ def extract_video_id(url):
         return None
 
 
+def generate_youtube_url(video_id):
+    """
+    The function `generate_youtube_url` takes a YouTube video ID as input and returns a YouTube URL.
+
+    :param video_id: The `video_id` parameter is a string that represents the ID of a YouTube video
+    :return: The function `generate_youtube_url` returns the YouTube URL for the given video ID.
+    """
+    return f"https://www.youtube.com/watch?v={video_id}"
+
+
 def is_text_file_empty(file_path):
     """
     The function checks if a text file is empty by comparing its size to zero.

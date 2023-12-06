@@ -3,48 +3,55 @@ from modules.worker import Worker
 from modules.worker_ffmpeg import Worker_ffmpeg
 from modules.settings import read_settings
 from modules.playlist import GeneratePlayList
+from modules.file_handler import FolderScanner
+from modules.functions import extract_video_id
+import os
 
 
 def main():
-    # Read settings
     settings = read_settings()
     file_counter = 1
+    q = queue.Queue()
 
-    # Ensure that the Worker objects start and finish sequentially
-    q = queue.Queue()  # create a queue
-
-    # Create an additional Worker object
     play_list_worker = GeneratePlayList(settings)
     q.put(play_list_worker)
 
-    # Start each Worker object in the queue, one by one
     while not q.empty():
         worker = q.get()
         worker.start()
-        worker.join()  # wait for the current thread to complete
+        worker.join()
 
-    # Open the text file
+    result = FolderScanner.scan_folder(
+        settings['inputFolder'], ['.webm', '.mp4'])
+    downloaded_ids = set(item[2] for item in result)
+
     with open(settings['linkReader'], 'r') as f:
-        # Read the file line by line
-        total_links = len(f.readlines())
-        f.seek(0)  # Reset file pointer to the beginning
+        f.seek(0)
+
+        link_ids = set()
         for line in f:
-            # Convert each line from JSON to text
-            video_id = line.strip()  # Assuming each line contains a single video ID
-            worker = Worker(video_id, settings, total_links, file_counter)
+            video_id = extract_video_id(line.strip())
+            link_ids.add(video_id)
+
+        missing_ids = link_ids - downloaded_ids
+        total_links = len(missing_ids)
+
+        for video_id in missing_ids:
+
+            worker = Worker(video_id, settings, total_links,
+                            file_counter, downloaded_ids)
             q.put(worker)
+            downloaded_ids.add(video_id)
             file_counter += 1
 
-    # Start each Worker object in the queue, one by one
     while not q.empty():
         worker = q.get()
         worker.start()
-        worker.join()  # wait for the current thread to complete
+        worker.join()
 
-    # Once all the Worker threads are completed, start the Worker_ffmpeg
     worker_ffmpeg = Worker_ffmpeg()
     worker_ffmpeg.start()
-    worker_ffmpeg.join()  # wait for the Worker_ffmpeg thread to finish
+    worker_ffmpeg.join()
 
 
 if __name__ == '__main__':
