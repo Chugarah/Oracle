@@ -11,6 +11,7 @@ comment_pattern = r"\[youtube\] Downloading comment (.+)"
 page_pattern = r"page (\d+)"
 count_pattern = r"\((\d+)\/~(\d+)\)"
 youtube_download = r'\[(?P<label>download)\]\s+(?P<percentage>\d*\.?\d+)%'
+error_pattern = r"ERROR: \[youtube\] (?P<video_id>[-\w]+): (?P<error_message>.+)"
 
 
 def run_subprocess(command):
@@ -34,40 +35,57 @@ def get_file_info(process, video_id, total_link, file_counter):
     """
     total_duration_var = None
     progress_bar = tqdm(total=100, position=0, leave=True, dynamic_ncols=True)
-
+    enable_disable_flag = False
     for line in process.stdout:
         # print(line)
-        matches_comments_downloading = re.findall(comment_pattern, line)
-        for match in matches_comments_downloading:
+        matches_error_copyright = re.findall(error_pattern, line)
+        for match in matches_error_copyright:
+            # Assuming video_id is the first capturing group in your regex
+            video_id = match[0]
+            # Assuming error_message_not_available is the second capturing group
+            error_message_not_available = match[1]
+            # Check if there is an error message before printing
+            if error_message_not_available:
+                # Print an error message including the video ID
+                progress_bar.close()
+                print(
+                    f"Error downloading video {video_id}: {error_message_not_available}")
 
-            page_match = re.search(page_pattern, match)
-            count_match = re.search(count_pattern, match)
+            else:
+                enable_disable_flag = True
 
-            if page_match and count_match:
-                page_number = page_match.group(1)
-                current_count = int(count_match.group(1))
-                total_count = int(count_match.group(2))
+        if not enable_disable_flag:
+            matches_comments_downloading = re.findall(comment_pattern, line)
+            for match in matches_comments_downloading:
+
+                page_match = re.search(page_pattern, match)
+                count_match = re.search(count_pattern, match)
+
+                if page_match and count_match:
+                    page_number = page_match.group(1)
+                    current_count = int(count_match.group(1))
+                    total_count = int(count_match.group(2))
+
+                    # Set progressbar description
+                    progress_bar.set_description(
+                        f"Downloading comment from video {video_id}  ({file_counter}/{total_link}) page: {page_number}"
+                    )
+                    # Update progressbar
+                    update_progress(progress_bar, current_count, total_count)
+
+            # Match output for video download
+            match_download_video = re.findall(youtube_download, line)
+            for match in match_download_video:
+                percentage = float(match[1])
+                rounded_percentage = math.ceil(percentage)
 
                 # Set progressbar description
                 progress_bar.set_description(
-                    f"Downloading comment from video {video_id}  ({file_counter}/{total_link}) page: {page_number}"
+                    f"Download video {video_id}: {file_counter}/{total_link}"
                 )
+
                 # Update progressbar
-                update_progress(progress_bar, current_count, total_count)
-
-        # Match output for video download
-        match_download_video = re.findall(youtube_download, line)
-        for match in match_download_video:
-            percentage = float(match[1])
-            rounded_percentage = math.ceil(percentage)
-
-            # Set progressbar description
-            progress_bar.set_description(
-                f"Download video {video_id}: {file_counter}/{total_link}"
-            )
-
-            # Update progressbar
-            update_progress(progress_bar, rounded_percentage, 100)
+                update_progress(progress_bar, rounded_percentage, 100)
 
     return progress_bar
 

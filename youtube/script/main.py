@@ -22,7 +22,7 @@ def main():
         worker.join()
 
     result = FolderScanner.scan_folder(
-        settings['inputFolder'], ['.webm', '.mp4'])
+        settings['inputFolder'], ['.webm'])
     downloaded_ids = set(item[2] for item in result)
 
     with open(settings['linkReader'], 'r') as f:

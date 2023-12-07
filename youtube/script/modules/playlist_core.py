@@ -150,7 +150,7 @@ class PlayListCore:
                 if match_items := total_links_regex.search(line):
                     play_list_total_items = match_items.group(1)
                     progress_bar.set_description(
-                        f"Preparing to items {play_list_name} playlist: {play_list_current_item} / {play_list_total_items} items"
+                        f"Processing items {play_list_name} playlist: {play_list_current_item} / {play_list_total_items} items"
                     )
 
                 # Getting the current item name
@@ -168,7 +168,7 @@ class PlayListCore:
                         progress_bar.update(100 - progress_bar.n)
                     else:
                         progress_bar.set_description(
-                            f"Preparing to items {play_list_name} playlist: {play_list_current_link} / {play_list_total_items} items"
+                            f"Processing items {play_list_name} playlist: {play_list_current_link} / {play_list_total_items} items"
                         )
 
                         # Calculate the progress percentage
