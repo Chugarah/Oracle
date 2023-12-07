@@ -1,5 +1,5 @@
 {
-    "authentication": "true",
+    "authentication": "false",
     "config": "youtube/script/youtube-conf/yt-dlp.conf",
     "browser": "chrome",
     "videoLinks": "youtube/script/youtube-conf/video_links.txt",
