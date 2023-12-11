@@ -23,7 +23,11 @@ regex_no_speech_threshold = re.compile(r"No speech threshold is met")
 
 def run_subprocess(command):
     return subprocess.Popen(
-        command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+        encoding='utf-8'  # Use the 'utf-8' character map
     )
 
 
@@ -195,12 +199,8 @@ def transcription(config, wave_list, files_to_transcribe):
                 command.append("true")
 
             # Add the BEEP flag if it is enabled
-            if config['BEEP_SOUND']:
-                command.append("--beep")
-                command.append("true")
-            else:
-                command.append("--beep")
-                command.append("false")
+            if not config['BEEP_SOUND']:
+                command.append("--beep_off")
 
             # Run the transcription
             process = run_subprocess(command)

@@ -23,15 +23,16 @@ class Worker_whisper(threading.Thread):
         def scan_folder(folder):
             wave_list = []
             for root, dirs, files in os.walk(folder):
-                for file in files:
-                    if file.endswith(".mp3"):
-                        webm_path = os.path.join(root, file)
-                        normalized_path = os.path.normpath(webm_path)
-                        current_folder = os.path.dirname(normalized_path)
-                        file_name_without_extension = os.path.splitext(os.path.basename(normalized_path))[
-                            0]
-                        wave_list.append(
-                            (normalized_path, current_folder, file_name_without_extension))
+                if 'whisper' not in dirs:  # Check if 'whisper' folder does not exist in the current directory
+                    for file in files:
+                        if file.endswith(".mp3"):
+                            webm_path = os.path.join(root, file)
+                            normalized_path = os.path.normpath(webm_path)
+                            current_folder = os.path.dirname(normalized_path)
+                            file_name_without_extension = os.path.splitext(
+                                os.path.basename(normalized_path))[0]
+                            wave_list.append(
+                                (normalized_path, current_folder, file_name_without_extension))
             return wave_list
 
         def count_whisper_folders(folder):
@@ -44,12 +45,10 @@ class Worker_whisper(threading.Thread):
 
         wave_list = scan_folder(
             self.config['INPUT_DIR'])
-        total_folders = count_whisper_folders(self.config['INPUT_DIR'])
 
         total_files = len(wave_list)
-        files_to_transcribe = total_files - total_folders
 
-        if (files_to_transcribe <= 0):
+        if (total_files <= 0):
             print("No wav files found in the input directory to transcribe.")
         else:
-            transcription(self.config, wave_list, files_to_transcribe)
+            transcription(self.config, wave_list, total_files)

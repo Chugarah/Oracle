@@ -8,8 +8,8 @@ LANGUAGE: 'English'
 # https://huggingface.co/openai/whisper-large
 # whisper-small
 # THis flags tells you where you can find the models large-v2
-# ['tiny', 'tiny.en', 'base', 'base.en', 'small', 'small.en', 'medium', 'medium.en', 'large', 'large-v1', 'large-v2']
-MODEL: "large-v2"
+# ['tiny', 'tiny.en', 'base', 'base.en', 'small', 'small.en', 'medium', 'medium.en', 'large', 'large-v1', 'large-v2','large-v3']
+MODEL: "large-v3"
 # Where the models are stored
 MODEL_DIR: "transcribe/whisper/models"
 # This flag sets the maximum width for each line of the 
