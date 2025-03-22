@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  downloader:
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile
+    container_name: oracle-downloader
+    volumes:
+      # Mount downloads directory
+      - ../downloads:/downloads
+      # Mount configuration files for easy editing
+      - ../script/downloader-conf:/app/script/downloader-conf
+      # Optional: Mount a custom URLs file
+      # - ../my-urls.txt:/app/urls.txt
+    environment:
+      # Example environment variables, uncomment and modify as needed
+      # URL: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      # FORMAT: "bestvideo[height<=1080]+bestaudio/best[height<=1080]"
+      # OUTPUT_TEMPLATE: "/downloads/%(uploader)s/%(title)s.%(ext)s"
+      # ADDITIONAL_OPTIONS: "--write-auto-subs --write-thumbnail"
+      
+    # Restart policy for production deployments
+    # restart: unless-stopped 
