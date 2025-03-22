@@ -21,6 +21,7 @@ def datetime_to_float(d):
 def update_progress(progress_bar, current_value, total_value):
     """
     The function updates the progress bar with the current value and total value.
+    Works with both percentage values and time-based values.
 
     :param progress_bar: The progress bar object that you want to update
     :param current_value: The current value represents the current progress or value that you want to
@@ -33,14 +34,19 @@ def update_progress(progress_bar, current_value, total_value):
     """
     progress_bar.total = float(total_value)
 
-    # Convert current_value to timedelta object
-    current_value_timedelta = timedelta(seconds=current_value)
+    # Check if current_value is already a number (percentage or count)
+    if isinstance(current_value, (int, float)):
+        progress_bar.update(current_value - progress_bar.n)
+    else:
+        # This is the original time-based implementation
+        # Convert current_value to timedelta object
+        current_value_timedelta = timedelta(seconds=current_value)
 
-    # Convert current_value_timedelta to float with millisecond precision
-    current_value_float = datetime_to_float(current_value_timedelta)
-    progress_bar.update(current_value_float - progress_bar.n)
+        # Convert current_value_timedelta to float with millisecond precision
+        current_value_float = datetime_to_float(current_value_timedelta)
+        progress_bar.update(current_value_float - progress_bar.n)
+
     progress_bar.refresh()
-
     return progress_bar
 
 

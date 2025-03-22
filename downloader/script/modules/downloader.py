@@ -28,74 +28,53 @@ def run_subprocess(command):
     )
 
 
-def get_file_info(process, video_id, total_link, file_counter):
+def download_progress_hook(progress_data, video_id, total_videos, file_counter):
     """
-    The function `get_file_info` takes in a process and video ID, and uses regular expressions to
-    extract information about the progress of downloading comments and videos, updating a progress bar
-    accordingly.
+    Progress hook function for yt-dlp to track download progress
 
-    :param process: The `process` parameter is the subprocess that is running the command to download
-    the file. It is used to read the output of the command and extract information about the progress of
-    the download
-    :param video_id: The `video_id` parameter is the unique identifier of the video that you want to get
-    the file information for
-    :return: the `progress_bar` object.
+    :param progress_data: Dictionary containing progress information from yt-dlp
+    :param video_id: The video ID being downloaded
+    :param total_videos: Total number of videos to download
+    :param file_counter: Current file number being downloaded
     """
-    total_duration_var = None
-    progress_bar = tqdm(total=100, position=0, leave=True, dynamic_ncols=True)
-    enable_disable_flag = False
-    for line in process.stdout:
-        # print(line)
-        matches_error_copyright = re.findall(error_pattern, line)
-        for match in matches_error_copyright:
-            # Assuming video_id is the first capturing group in your regex
-            video_id = match[0]
-            # Assuming error_message_not_available is the second capturing group
-            error_message_not_available = match[1]
-            # Check if there is an error message before printing
-            if error_message_not_available:
-                # Print an error message including the video ID
-                progress_bar.close()
-                print(
-                    f"Error downloading video {video_id}: {error_message_not_available}")
+    status = progress_data['status']
 
-            else:
-                enable_disable_flag = True
+    # Initialize progress bar if not already initialized
+    if not hasattr(download_progress_hook, 'progress_bar'):
+        download_progress_hook.progress_bar = tqdm(
+            total=100, position=0, leave=True, dynamic_ncols=True)
 
-        if not enable_disable_flag:
-            matches_comments_downloading = re.findall(comment_pattern, line)
-            for match in matches_comments_downloading:
+    progress_bar = download_progress_hook.progress_bar
 
-                page_match = re.search(page_pattern, match)
-                count_match = re.search(count_pattern, match)
+    if status == 'downloading':
+        # Set progress bar description for video download
+        progress_bar.set_description(
+            f"Download video {video_id}: {file_counter}/{total_videos}"
+        )
 
-                if page_match and count_match:
-                    page_number = page_match.group(1)
-                    current_count = int(count_match.group(1))
-                    total_count = int(count_match.group(2))
+        # Calculate percentage based on bytes if available
+        if progress_data.get('total_bytes'):
+            percentage = (
+                progress_data['downloaded_bytes'] / progress_data['total_bytes']) * 100
+            rounded_percentage = math.ceil(percentage)
+            update_progress(progress_bar, rounded_percentage, 100)
+        elif progress_data.get('total_bytes_estimate'):
+            percentage = (
+                progress_data['downloaded_bytes'] / progress_data['total_bytes_estimate']) * 100
+            rounded_percentage = math.ceil(percentage)
+            update_progress(progress_bar, rounded_percentage, 100)
 
-                    # Set progressbar description
-                    progress_bar.set_description(
-                        f"Downloading comment from video {video_id}  ({file_counter}/{total_link}) page: {page_number}"
-                    )
-                    # Update progressbar
-                    update_progress(progress_bar, current_count, total_count)
+    elif status == 'finished':
+        # Close the progress bar when download is complete
+        progress_bar.close()
+        # Reset the progress bar for future downloads
+        del download_progress_hook.progress_bar
 
-            # Match output for video download
-            match_download_video = re.findall(youtube_download, line)
-            for match in match_download_video:
-                percentage = float(match[1])
-                rounded_percentage = math.ceil(percentage)
-
-                # Set progressbar description
-                progress_bar.set_description(
-                    f"Download video {video_id}: {file_counter}/{total_link}"
-                )
-
-                # Update progressbar
-                update_progress(progress_bar, rounded_percentage, 100)
-
-    return progress_bar
+    elif status == 'error':
+        progress_bar.close()
+        print(
+            f"Error downloading video {video_id}: {progress_data.get('error', 'Unknown error')}")
+        del download_progress_hook.progress_bar
 
 
 def handle_conversion_interrupted(process, progress_bar, output_file):
@@ -134,9 +113,11 @@ def handle_error(e, process, progress_bar, output_file):
     output of the process is being written to
     """
     print("An error occurred:", str(e))
-    progress_bar.close()
-    process.terminate()
-    if os.path.exists(output_file):
+    if progress_bar:
+        progress_bar.close()
+    if process:
+        process.terminate()
+    if output_file and os.path.exists(output_file):
         time.sleep(5)
         os.remove(output_file)
     sys.exit(1)
@@ -155,27 +136,39 @@ def download_video(video_url, config, video_id, total_videos, file_counter):
     track the progress or status of the video download or perform any other operations related to the
     specific video
     """
-    # Use yt-dlp command regardless of platform
-    command = ["yt-dlp", "--config-location", config['config'], video_url]
+    # Use yt-dlp with progress hooks for tracking download progress
+    from yt_dlp import YoutubeDL
 
-    # If the user has enabled authentication, add the cookie to the command
+    # Create progress hook with video context
+    import functools
+    progress_hook = functools.partial(download_progress_hook, video_id=video_id,
+                                      total_videos=total_videos, file_counter=file_counter)
+
+    # Configure yt-dlp options
+    ydl_opts = {
+        'config_location': config['config'],
+        'progress_hooks': [progress_hook],
+    }
+
+    # If the user has enabled authentication, add the cookie to the options
     if config['authentication'] == "true":
-        command.append("--cookies")
-        command.append(config['authCookie'])
+        ydl_opts['cookiefile'] = config['authCookie']
 
-    process = run_subprocess(command)
-    progress_bar = get_file_info(
-        process, video_id, total_videos, file_counter)
-
+    # Create YoutubeDL instance and download the video
     try:
-        try:
-            # Placeholder for potentially additional code
-            pass
-        except KeyboardInterrupt:
-            handle_conversion_interrupted(process, progress_bar, None)
-
-        process.wait()
-        process.terminate()
-        progress_bar.close()
+        with YoutubeDL(ydl_opts) as ydl:
+            ydl.download([video_url])
+    except KeyboardInterrupt:
+        # Handle keyboard interrupt
+        if hasattr(download_progress_hook, 'progress_bar'):
+            download_progress_hook.progress_bar.close()
+            del download_progress_hook.progress_bar
+        print("Download interrupted by user.")
+        sys.exit(1)
     except Exception as e:
-        handle_error(e, process, progress_bar, None)
+        # Handle other exceptions
+        if hasattr(download_progress_hook, 'progress_bar'):
+            download_progress_hook.progress_bar.close()
+            del download_progress_hook.progress_bar
+        print(f"Error during download: {e}")
+        sys.exit(1)

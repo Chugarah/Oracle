@@ -2,6 +2,12 @@
 
 Welcome traveler, to the media downloader module. This module is using yt-dlp to download videos from YouTube and other platforms. The module is using Python and can run both locally or via Docker. Previously it supported Windows environments only, but now it supports both Windows and Linux via Docker.
 
+## Recent Updates
+
+- **Improved Progress Tracking**: Now using yt-dlp's built-in progress hooks for more accurate download progress reporting
+- **API-Based Integration**: Enhanced integration with yt-dlp using the Python API instead of subprocess calls
+- **Better Error Handling**: More robust error handling and progress tracking
+
 Lets start with system requirements.
 
 ## System Requirements
