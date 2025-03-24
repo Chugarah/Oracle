@@ -122,6 +122,19 @@ def get_ytdlp_options(config: Dict[str, Any], source_type: str, source_config: D
     if rate_limit and rate_limit != '0':
         options['ratelimit'] = rate_limit
 
+    # Add sleep intervals if specified
+    sleep_interval = ytdlp_config.get('sleep_interval')
+    if sleep_interval:
+        options['sleep_interval'] = sleep_interval
+
+    max_sleep_interval = ytdlp_config.get('max_sleep_interval')
+    if max_sleep_interval:
+        options['max_sleep_interval'] = max_sleep_interval
+
+    sleep_requests = ytdlp_config.get('sleep_requests')
+    if sleep_requests:
+        options['sleep_requests'] = sleep_requests
+
     # Add retry count
     options['retries'] = ytdlp_config.get('retry_count', 3)
 

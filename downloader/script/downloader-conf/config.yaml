@@ -13,12 +13,17 @@ ytdlp:
   authentication:
     enabled: false
     cookie_file: "auth/cookies.txt"
+  # Proxy settings rotation
   proxy:
     enabled: false
     url: ""
-  rate_limit: "25000"  # 0 = unlimited
+  rate_limit: "25000"  # 0 = unlimited, 25000 = 25MB/s
   retry_count: 3
   user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+  # Sleep interval settings to avoid rate limiting
+  sleep_interval: 5     # Minimum seconds to sleep between downloads
+  max_sleep_interval: 15  # Maximum seconds to sleep (creates a random range)
+  sleep_requests: 1       # Seconds to sleep between requests
   progress_options:
     # Display options
     quiet: false                 # Activate quiet mode
@@ -65,4 +70,28 @@ sources:
   
   default:
     format: "best"
-    output_template: "downloads/%(extractor)s/%(id)s.%(ext)s" 
+    output_template: "downloads/%(extractor)s/%(id)s.%(ext)s"
+
+# Proxy Rotator Configuration
+proxy_rotator:
+  enabled: false  # Set to true if you want to use proxy rotation
+  host: "127.0.0.1"
+  port: 8899
+  
+  # Rotation settings
+  rotation:
+    strategy: "round-robin"  # Options: round-robin, random, weighted, performance
+    interval: 10             # Time in seconds between rotations
+    on_error: true           # Whether to rotate on errors
+  
+  # Health check settings
+  health:
+    check_interval: 60       # Time in seconds between health checks
+    timeout: 5               # Health check timeout in seconds
+    max_failures: 3          # Max consecutive failures before blacklisting
+    cooldown_period: 300     # Time in seconds to keep a proxy blacklisted
+  
+  # Proxy sources
+  proxy_list_file: "downloader-conf/proxy_list.txt"
+  
+# Other configuration settings for the downloader can be added here 
