@@ -1,9 +1,9 @@
-import subprocess
 import re
 import sys
 import os
 import time
 from tqdm import tqdm
+from ffmpeg import FFmpeg, Progress
 from modules.functions import update_progress, convert_time_to_seconds
 
 regex_duration = re.compile(r"Duration: (\d{2}:\d{2}:\d{2}\.\d{2})")
@@ -11,94 +11,97 @@ regex_time = re.compile(r"time=(\d{1,2}:\d{1,2}:\d{1,2}\.\d{2})")
 get_extension = re.compile(r"#0, (.*?), to")
 
 
-def get_file_info(process, file_name, file_counter, files_to_convert):
-    total_duration_var = None
-    progress_bar = tqdm(total=100, position=0, leave=True, dynamic_ncols=True)
-
-    for line in process.stdout:
-        # print(line)
-        if match := regex_duration.search(line):
-            total_duration_var = convert_time_to_seconds(
-                match.group(1)
-            )
-
-        if match := get_extension.search(line):
-            progress_bar.set_description(
-                f"Converting file {file_counter} / {files_to_convert}: {file_name}"
-            )
-
-        if match := regex_time.search(line):
-            current_value = round(convert_time_to_seconds(match.group(1)), 3)
-
-            # If current_value is greater than total duration,
-            # set progress bar to 100%
-            if current_value > total_duration_var:
-                progress_bar.update(100 - progress_bar.n)
-            else:
-                progress_bar.update(
-                    (current_value/total_duration_var)*100 - progress_bar.n)
-
-            progress_bar.refresh()
-
-    return progress_bar
-
-
-def handle_conversion_interrupted(process, progress_bar, output_file):
+def handle_conversion_interrupted(progress_bar, output_file, ffmpeg_instance=None):
     print("Conversion interrupted by user.")
     progress_bar.close()
-    process.terminate()
+
+    if ffmpeg_instance:
+        ffmpeg_instance.terminate()
+
     if os.path.exists(output_file):
         os.remove(output_file)
     sys.exit(1)
 
 
-def handle_error(e, process, progress_bar, output_file):
+def handle_error(e, progress_bar, output_file, ffmpeg_instance=None):
     print("An error occurred:", str(e))
     progress_bar.close()
-    process.terminate()
+
+    if ffmpeg_instance:
+        ffmpeg_instance.terminate()
+
     if os.path.exists(output_file):
         time.sleep(5)
         os.remove(output_file)
     sys.exit(1)
 
 
-def run_subprocess(command: list) -> subprocess.Popen:
-    try:
-        process = subprocess.Popen(
-            command,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-            encoding='utf-8'  # Specify encoding to handle special characters
-        )
-        return process
-    except subprocess.CalledProcessError as e:
-        print(f"Command '{command}' failed with return code {e.returncode}")
-    except subprocess.TimeoutExpired:
-        print("Command timed out")
-
-
 def convert_sound(webm_files, output_file, file_khz, file_name, files_to_convert, file_counter):
-    command = [
-        "ffmpeg", "-i", webm_files, "-vn", "-acodec", "libmp3lame",
-        "-b:a", "320k", "-ac", "2", "-ar", file_khz, "-y",
-        "-map_metadata", "0", "-id3v2_version", "3", output_file
-    ]
+    progress_bar = tqdm(total=100, position=0, leave=True, dynamic_ncols=True)
+    progress_bar.set_description(
+        f"Converting file {file_counter} / {files_to_convert}: {file_name}")
 
-    process = run_subprocess(command)
+    # Create FFmpeg instance
+    ffmpeg = (
+        FFmpeg()
+        .option("y")  # Overwrite output files without asking
+        .input(webm_files)
+        .output(
+            output_file,
+            {
+                "vn": None,              # No video
+                "acodec": "libmp3lame",  # MP3 codec
+                "b:a": "320k",           # Bitrate
+                "ac": "2",               # 2 Audio channels (stereo)
+                "ar": file_khz,          # Sample rate
+                "map_metadata": "0",     # Copy metadata
+                "id3v2_version": "3"     # ID3 version
+            }
+        )
+    )
 
-    progress_bar = get_file_info(
-        process, file_name, file_counter, files_to_convert)
+    # Set up progress handling
+    total_duration = None
+
+    @ffmpeg.on("stderr")
+    def on_stderr(line):
+        nonlocal total_duration
+
+        # Extract duration if not already set
+        if total_duration is None:
+            if match := regex_duration.search(line):
+                total_duration = convert_time_to_seconds(match.group(1))
+
+        # Update progress based on time
+        if match := regex_time.search(line):
+            current_value = round(convert_time_to_seconds(match.group(1)), 3)
+
+            if total_duration:
+                # If current_value is greater than total duration,
+                # set progress bar to 100%
+                if current_value > total_duration:
+                    progress_bar.update(100 - progress_bar.n)
+                else:
+                    progress_bar.update(
+                        (current_value/total_duration)*100 - progress_bar.n)
+
+                progress_bar.refresh()
+
+    @ffmpeg.on("progress")
+    def on_progress(progress: Progress):
+        # This is an alternative way to track progress if the stderr method doesn't work reliably
+        if total_duration and progress.time and progress.time > 0:
+            percent = min(100, (progress.time / total_duration) * 100)
+            progress_bar.update(percent - progress_bar.n)
+            progress_bar.refresh()
 
     try:
         try:
-            # Placeholder for potentially additional code
-            pass
+            # Execute FFmpeg
+            ffmpeg.execute()
         except KeyboardInterrupt:
-            handle_conversion_interrupted(process, progress_bar, output_file)
+            handle_conversion_interrupted(progress_bar, output_file, ffmpeg)
 
-        process.wait()
-        process.terminate()
         progress_bar.close()
     except Exception as e:
-        handle_error(e, process, progress_bar, output_file)
+        handle_error(e, progress_bar, output_file, ffmpeg)

@@ -32,22 +32,51 @@ def update_progress(progress_bar, current_value, total_value):
     accordingly
     :return: the updated progress bar.
     """
-    progress_bar.total = float(total_value)
+    try:
+        # Ensure values are properly converted to float before any operations
+        try:
+            total_value_float = float(total_value)
+            progress_bar.total = total_value_float
+        except (ValueError, TypeError):
+            # If conversion fails, use a default value
+            progress_bar.total = 100.0
+            print(
+                f"Warning: Could not convert total_value '{total_value}' to float")
 
-    # Check if current_value is already a number (percentage or count)
-    if isinstance(current_value, (int, float)):
-        progress_bar.update(current_value - progress_bar.n)
-    else:
-        # This is the original time-based implementation
-        # Convert current_value to timedelta object
-        current_value_timedelta = timedelta(seconds=current_value)
+        # Handle current_value based on its type
+        try:
+            if isinstance(current_value, (int, float)):
+                current_float = float(current_value)
+            elif isinstance(current_value, str):
+                current_float = float(current_value)
+            else:
+                # For time-based values
+                current_value_timedelta = timedelta(seconds=current_value)
+                current_float = datetime_to_float(current_value_timedelta)
 
-        # Convert current_value_timedelta to float with millisecond precision
-        current_value_float = datetime_to_float(current_value_timedelta)
-        progress_bar.update(current_value_float - progress_bar.n)
+            # Ensure n is a number before comparison
+            n_float = float(
+                progress_bar.n) if progress_bar.n is not None else 0.0
 
-    progress_bar.refresh()
-    return progress_bar
+            # Calculate difference and update
+            diff = current_float - n_float
+            if diff > 0:  # Only update if there's positive progress
+                progress_bar.update(diff)
+
+        except (ValueError, TypeError) as e:
+            # If conversion fails, just refresh the bar without updating
+            print(f"Progress value conversion error: {e}")
+
+        progress_bar.refresh()
+        return progress_bar
+    except Exception as e:
+        # Catch all other exceptions to prevent download from failing
+        print(f"Progress update error: {e}")
+        try:
+            progress_bar.refresh()
+        except:
+            pass
+        return progress_bar
 
 
 def convert_time_to_seconds(time_str):

@@ -1,0 +1,32 @@
+{
+  "youtube": {
+    "config": {
+      "enabled": true,
+      "max_downloads": 0,
+      "prefer_config": "source",
+      "progress_options": {
+        "console_title": true,
+        "progress_template": "download:[%(info.id)s] %(progress.eta)s %(progress._percent_str)s",
+        "newline": false
+      }
+    },
+    "items": [
+      {
+        "url": "https://www.youtube.com/watch?v=rCHLCW3F6hU&ab_channel=RudiRennkamel"
+      }
+    ]
+  },
+  "tiktok": {
+    "config": {
+      "enabled": false,
+      "max_downloads": 10,
+      "prefer_config": "custom",
+      "custom_format": "best"
+    },
+    "items": [
+      {
+        "url": "https://www.tiktok.com/@example/video/1234567890"
+      }
+    ]
+  }
+} 

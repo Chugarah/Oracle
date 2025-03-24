@@ -4,8 +4,11 @@ import sys
 import os
 import time
 from tqdm import tqdm
-from modules.functions import update_progress, convert_time_to_seconds
+from modules.functions import update_progress, convert_time_to_seconds, extract_video_id
 import math
+import yt_dlp
+from typing import Dict, Any, List, Callable, Optional
+import functools
 
 comment_pattern = r"\[youtube\] Downloading comment (.+)"
 page_pattern = r"page (\d+)"
@@ -26,55 +29,6 @@ def run_subprocess(command):
     return subprocess.Popen(
         command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True
     )
-
-
-def download_progress_hook(progress_data, video_id, total_videos, file_counter):
-    """
-    Progress hook function for yt-dlp to track download progress
-
-    :param progress_data: Dictionary containing progress information from yt-dlp
-    :param video_id: The video ID being downloaded
-    :param total_videos: Total number of videos to download
-    :param file_counter: Current file number being downloaded
-    """
-    status = progress_data['status']
-
-    # Initialize progress bar if not already initialized
-    if not hasattr(download_progress_hook, 'progress_bar'):
-        download_progress_hook.progress_bar = tqdm(
-            total=100, position=0, leave=True, dynamic_ncols=True)
-
-    progress_bar = download_progress_hook.progress_bar
-
-    if status == 'downloading':
-        # Set progress bar description for video download
-        progress_bar.set_description(
-            f"Download video {video_id}: {file_counter}/{total_videos}"
-        )
-
-        # Calculate percentage based on bytes if available
-        if progress_data.get('total_bytes'):
-            percentage = (
-                progress_data['downloaded_bytes'] / progress_data['total_bytes']) * 100
-            rounded_percentage = math.ceil(percentage)
-            update_progress(progress_bar, rounded_percentage, 100)
-        elif progress_data.get('total_bytes_estimate'):
-            percentage = (
-                progress_data['downloaded_bytes'] / progress_data['total_bytes_estimate']) * 100
-            rounded_percentage = math.ceil(percentage)
-            update_progress(progress_bar, rounded_percentage, 100)
-
-    elif status == 'finished':
-        # Close the progress bar when download is complete
-        progress_bar.close()
-        # Reset the progress bar for future downloads
-        del download_progress_hook.progress_bar
-
-    elif status == 'error':
-        progress_bar.close()
-        print(
-            f"Error downloading video {video_id}: {progress_data.get('error', 'Unknown error')}")
-        del download_progress_hook.progress_bar
 
 
 def handle_conversion_interrupted(process, progress_bar, output_file):
@@ -123,52 +77,175 @@ def handle_error(e, process, progress_bar, output_file):
     sys.exit(1)
 
 
-def download_video(video_url, config, video_id, total_videos, file_counter):
+def download_video(video_url: str, ytdlp_options: Dict[str, Any], video_id: str, total_videos: int, file_counter: int) -> bool:
     """
-    The function `download_video` downloads a video from a given URL using yt-dlp, handles potential
-    errors and interruptions, and provides progress updates.
+    Download a single video using YT-DLP with native progress reporting.
 
-    :param video_url: The `video_url` parameter is the URL of the video that you want to download. It
-    should be a valid URL pointing to a video file
-    :param config: The `config` parameter is the location of the configuration file for `yt-dlp`.
-    This file contains settings and options for the video download process
-    :param video_id: The `video_id` parameter is a unique identifier for the video. It can be used to
-    track the progress or status of the video download or perform any other operations related to the
-    specific video
+    :param video_url: The URL of the video to download
+    :param ytdlp_options: Dictionary containing YT-DLP options
+    :param video_id: The ID of the video being downloaded
+    :param total_videos: Total number of videos to download
+    :param file_counter: Current video number being processed
+    :return: True if download was successful, False otherwise
     """
-    # Use yt-dlp with progress hooks for tracking download progress
-    from yt_dlp import YoutubeDL
-
-    # Create progress hook with video context
-    import functools
-    progress_hook = functools.partial(download_progress_hook, video_id=video_id,
-                                      total_videos=total_videos, file_counter=file_counter)
-
-    # Configure yt-dlp options
-    ydl_opts = {
-        'config_location': config['config'],
-        'progress_hooks': [progress_hook],
-    }
-
-    # If the user has enabled authentication, add the cookie to the options
-    if config['authentication'] == "true":
-        ydl_opts['cookiefile'] = config['authCookie']
-
-    # Create YoutubeDL instance and download the video
     try:
-        with YoutubeDL(ydl_opts) as ydl:
+        # Print simple progress header
+        print(f"\n[{file_counter}/{total_videos}] Downloading video: {video_id}")
+
+        # Create a minimal set of options to avoid any potential conflicts
+        minimal_options = {
+            'format': ytdlp_options.get('format', 'best'),
+            'outtmpl': ytdlp_options.get('outtmpl', 'downloads/%(extractor)s/%(id)s.%(ext)s'),
+            'quiet': False,  # Ensure progress is shown
+            'no_color': True,  # Disable colors which can cause issues
+        }
+
+        # Extract progress options
+        progress_options = ytdlp_options.get('progress_options', {})
+
+        # Add only essential options and safe progress options
+        if 'cookiefile' in ytdlp_options:
+            minimal_options['cookiefile'] = ytdlp_options['cookiefile']
+
+        if 'writesubtitles' in ytdlp_options:
+            minimal_options['writesubtitles'] = ytdlp_options['writesubtitles']
+            minimal_options['subtitleslangs'] = ytdlp_options.get(
+                'subtitleslangs', ['en'])
+
+        if 'writethumbnail' in ytdlp_options:
+            minimal_options['writethumbnail'] = ytdlp_options['writethumbnail']
+
+        if 'embed_thumbnail' in ytdlp_options:
+            minimal_options['embed_thumbnail'] = ytdlp_options['embed_thumbnail']
+
+        if 'addmetadata' in ytdlp_options:
+            minimal_options['addmetadata'] = ytdlp_options['addmetadata']
+
+        if 'proxy' in ytdlp_options:
+            minimal_options['proxy'] = ytdlp_options['proxy']
+
+        # Handle safe progress options
+        if progress_options.get('quiet', False):
+            minimal_options['quiet'] = True
+
+        if progress_options.get('verbose', False):
+            minimal_options['verbose'] = True
+
+        if progress_options.get('no_warnings', False):
+            minimal_options['no_warnings'] = True
+
+        if progress_options.get('simulate', False):
+            minimal_options['simulate'] = True
+
+        if progress_options.get('skip_download', False):
+            minimal_options['skip_download'] = True
+
+        # Create YT-DLP instance with minimal options
+        with yt_dlp.YoutubeDL(minimal_options) as ydl:
+            # Download the video
             ydl.download([video_url])
-    except KeyboardInterrupt:
-        # Handle keyboard interrupt
-        if hasattr(download_progress_hook, 'progress_bar'):
-            download_progress_hook.progress_bar.close()
-            del download_progress_hook.progress_bar
-        print("Download interrupted by user.")
-        sys.exit(1)
+
+        print(
+            f"Successfully downloaded [{file_counter}/{total_videos}]: {video_id}")
+        return True
+
+    except yt_dlp.utils.DownloadError as e:
+        # Handle download errors
+        print(f"Download error for {video_id}: {str(e)}")
+        return False
+
     except Exception as e:
-        # Handle other exceptions
-        if hasattr(download_progress_hook, 'progress_bar'):
-            download_progress_hook.progress_bar.close()
-            del download_progress_hook.progress_bar
-        print(f"Error during download: {e}")
-        sys.exit(1)
+        # Handle other errors
+        print(f"Unexpected error for {video_id}: {str(e)}")
+        # Try with ultra minimal options if we have a type error
+        if isinstance(e, TypeError) or "TypeError" in str(e):
+            try:
+                print("Attempting with ultra minimal options due to error...")
+                ultra_minimal_options = {
+                    'format': 'best',
+                    'outtmpl': f'downloads/{video_id}.%(ext)s',
+                    'quiet': False,
+                    'no_color': True
+                }
+                with yt_dlp.YoutubeDL(ultra_minimal_options) as ydl:
+                    ydl.download([video_url])
+                print(
+                    f"Successfully downloaded with ultra minimal options: {video_id}")
+                return True
+            except Exception as e2:
+                print(f"Still failed with ultra minimal options: {str(e2)}")
+                return False
+        return False
+
+
+def download_videos_from_source(source_type: str, source_config: Dict[str, Any],
+                                ytdlp_options: Dict[str, Any], items: List[Dict[str, str]]):
+    """
+    Download videos from a specific source.
+
+    :param source_type: The type of source (e.g., "youtube", "tiktok")
+    :param source_config: The source-specific configuration from the media library
+    :param ytdlp_options: Dictionary containing YT-DLP options
+    :param items: List of items to download from the source
+    """
+    try:
+        # Check for enabled flag
+        if not source_config.get('enabled', True):
+            print(f"Source {source_type} is disabled. Skipping.")
+            return
+
+        # Count total items
+        total_items = len(items)
+        if total_items == 0:
+            print(f"No items found for {source_type}. Skipping.")
+            return
+
+        print(f"Starting download of {total_items} items from {source_type}")
+
+        # Process each item in the source
+        for index, item in enumerate(items, 1):
+            # Get URL from item - depending on source type, URL is stored differently
+            url = item.get('url', '')
+
+            # Skip if no URL
+            if not url:
+                print(f"No URL found for item {index}. Skipping.")
+                continue
+
+            # Always extract video ID from URL
+            video_id = extract_video_id(url) or f"{source_type}-item-{index}"
+
+            # Use source-level options by default
+            item_options = ytdlp_options.copy()
+
+            # Backward compatibility for older format
+            if 'options' in item and isinstance(item['options'], dict):
+                # Log a deprecation warning
+                print(
+                    f"Warning: Item-level options are deprecated for {video_id}. Please move to source-level config.")
+
+                # Still support the old format
+                for key, value in item['options'].items():
+                    if key == 'progress_options' and isinstance(value, dict):
+                        item_options['progress_options'] = {
+                            **(item_options.get('progress_options', {})),
+                            **value
+                        }
+                    else:
+                        item_options[key] = value
+
+            # Download the video with configured options
+            success = download_video(
+                url, item_options, video_id, total_items, index)
+
+            # Handle download result
+            if not success:
+                print(
+                    f"Failed to download item {index}/{total_items}: {video_id}")
+
+        print(f"Finished processing all items from {source_type}")
+
+    except Exception as e:
+        print(f"Error processing source {source_type}: {str(e)}")
+        import traceback
+        traceback.print_exc()

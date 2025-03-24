@@ -1,0 +1,68 @@
+# Application settings
+app:
+  download_threads: 3
+  check_existing: true
+  log_level: "info"
+  ffmpeg:
+    enabled: true
+    threads: 2
+    additional_options: "-c:v libx264 -c:a aac"
+
+# YT-DLP base settings
+ytdlp:
+  authentication:
+    enabled: false
+    cookie_file: "auth/cookies.txt"
+  proxy:
+    enabled: false
+    url: ""
+  rate_limit: "25000"  # 0 = unlimited
+  retry_count: 3
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+  progress_options:
+    # Display options
+    quiet: false                 # Activate quiet mode
+    verbose: false               # Print various debugging information
+    no_warnings: false           # Ignore warnings
+    
+    # Download control
+    simulate: false              # Do not download the video
+    skip_download: false         # Do not download the video but write all related files
+    
+    # Output formats
+    dump_json: false             # Print JSON information for each video
+    dump_single_json: false      # Print JSON information for each URL or infojson
+    
+    # Progress bar options
+    no_progress: false           # Do not print progress bar
+    progress: true               # Show progress bar, even if in quiet mode
+    console_title: true          # Display progress in console titlebar
+    newline: false               # Output progress bar as new lines
+    
+    # Progress customization
+    # Examples for progress_template:
+    # - "download:%(info.id)s - %(progress.eta)s - %(progress._percent_str)s"
+    # - "download-title:[%(info.id)s] %(info.title)s"
+    progress_template: ""        # Custom template for progress display
+    progress_delta: 1            # Time between progress output (seconds)
+
+# Source-specific YT-DLP options
+sources:
+  youtube:
+    format: "best"
+    subtitles: "en"
+    embed_metadata: true
+    output_template: "downloads/youtube/%(channel_id)s/%(upload_date>%Y)s/%(upload_date>%m)s/%(id)s/%(id)s.%(ext)s"
+    # Source-specific progress options (override global settings)
+    progress_options:
+      console_title: true
+      progress_template: "download:[%(info.id)s] %(progress.eta)s %(progress._percent_str)s"
+  
+  tiktok:
+    format: "best"
+    embed_metadata: true
+    output_template: "downloads/tiktok/%(uploader)s/%(id)s.%(ext)s"
+  
+  default:
+    format: "best"
+    output_template: "downloads/%(extractor)s/%(id)s.%(ext)s" 

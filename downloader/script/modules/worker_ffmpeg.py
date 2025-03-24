@@ -12,7 +12,7 @@ from modules.ffmpeg_conversion_worker import convert_sound
 output_lock = threading.Lock()
 
 
-class Worker_ffmpeg(threading.Thread):
+class WorkerFFmpeg(threading.Thread):
     def __init__(self):
         super().__init__()
 
